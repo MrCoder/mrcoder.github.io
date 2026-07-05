@@ -1,76 +1,191 @@
----
-layout: post-index
-title: Latest Posts
-description: "Describe this nonsense."
-tags: [Jekyll, theme, themes, responsive, blog, modern]
-comments: false
-image:
-  feature: abstract-1.jpg
-  credit: dargadgetz
-  creditlink: http://www.dargadgetz.com/ios-7-abstract-wallpaper-pack-for-iphone-5-and-ipod-touch-retina/
----
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Field Guide — four Claude Code skills</title>
+<meta name="description" content="Four Claude Code skills for the gap between what you planned and what actually happens: blind-spot-pass, deviation-log, merge-quiz, and pitch-me." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/style.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23ede9dd'/%3E%3Ccircle cx='24' cy='24' r='17' fill='none' stroke='%2322261f' stroke-width='2'/%3E%3Cpath d='M24,10 L30,24 L24,38 L18,24 Z' fill='%23a63d2f'/%3E%3C/svg%3E" />
+</head>
+<body>
 
-{% for post in paginator.posts %}
-<article class="hentry">
-  <header>
-    {% if post.image.feature %}
-      <div class="entry-image-index">
-        <a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}"><img src="{{ site.url }}/images/{{ post.image.feature }}" alt="{{ post.title }}"></a>
-      </div><!-- /.entry-image -->
-    {% endif %}
-    <div class="entry-meta">
-      <span class="entry-date date published updated"><time datetime="{{ post.date | date_to_xmlschema }}"><a href="{{ site.url }}{{ post.url }}">{{ post.date | date: "%B %d, %Y" }}</a></time></span><span class="author vcard"><span class="fn"><a href="{{ site.url }}/about/" title="About {{ site.owner.name }}">{{ site.owner.name }}</a></span></span>
-      {% if site.reading_time %}
-      <span class="entry-reading-time">
-        <i class="fa fa-clock-o"></i>
-        {% assign readtime = post.content | number_of_words | divided_by:site.words_per_minute %}
-        Reading time ~{% if readtime <= 1 %}1 minute{% else %}{{ readtime }} minutes{% endif %}
-      </span><!-- /.entry-reading-time -->
-      {% endif %}
-    </div><!-- /.entry-meta -->
-    {% if post.link %}
-      <h1 class="entry-title"><a href="{{ site.url }}{{ post.url }}" class="permalink" rel="bookmark" title="{{ post.title }}"><i class="fa fa-bookmark"></i></a> <a href="{{ post.link }}">{{ post.title }}</a></h1>
-    {% else %}
-      <h1 class="entry-title"><a href="{{ site.url }}{{ post.url }}" rel="bookmark" title="{{ post.title }}" itemprop="url">{{ post.title }}</a></h1>
-    {% endif %}
+<main class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Field guide · Claude Code skills</p>
+    <h1>The map is not the territory</h1>
+    <p class="lede">
+      Four skills for the gap between what you planned and what actually happens —
+      one for before you start, one for mid-build, two for right before you ship.
+      Built after reading <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq's field guide to Fable</a>.
+    </p>
+
+    <div class="transect-wrap">
+      <svg class="compass" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="17" fill="none" stroke="#22261f" stroke-width="1" />
+        <line x1="24" y1="4" x2="24" y2="10" stroke="#22261f" stroke-width="1" />
+        <line x1="24" y1="38" x2="24" y2="44" stroke="#22261f" stroke-width="1" />
+        <line x1="4" y1="24" x2="10" y2="24" stroke="#22261f" stroke-width="1" />
+        <line x1="38" y1="24" x2="44" y2="24" stroke="#22261f" stroke-width="1" />
+        <path d="M24,13 L28,24 L24,35 L20,24 Z" fill="#a63d2f" />
+        <text x="24" y="9" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#22261f">N</text>
+      </svg>
+
+      <div class="transect">
+        <svg viewBox="0 0 900 180" preserveAspectRatio="xMinYMid meet" role="img" aria-label="A survey transect showing when each skill applies: blind-spot-pass before implementation, deviation-log during implementation, merge-quiz and pitch-me after implementation">
+          <line class="transect-divider" x1="260" y1="40" x2="260" y2="145" />
+          <line class="transect-divider" x1="560" y1="40" x2="560" y2="145" />
+
+          <path class="transect-line" d="M30,114 C160,90 260,132 400,108 C500,90 560,130 640,106 C700,88 760,120 870,108" />
+
+          <line class="transect-stem pre" x1="140" y1="110" x2="140" y2="40" />
+          <g class="transect-node pre">
+            <circle cx="140" cy="110" r="4" />
+            <text class="transect-label" x="140" y="30" text-anchor="middle">blind-spot-pass</text>
+          </g>
+
+          <line class="transect-stem during" x1="430" y1="108" x2="430" y2="40" />
+          <g class="transect-node during">
+            <circle cx="430" cy="108" r="4" />
+            <text class="transect-label" x="430" y="30" text-anchor="middle">deviation-log</text>
+          </g>
+
+          <line class="transect-stem post" x1="660" y1="106" x2="660" y2="40" />
+          <g class="transect-node post">
+            <circle cx="660" cy="106" r="4" />
+            <text class="transect-label" x="655" y="30" text-anchor="end">merge-quiz</text>
+          </g>
+
+          <line class="transect-stem post" x1="800" y1="108" x2="800" y2="40" />
+          <g class="transect-node post">
+            <circle cx="800" cy="108" r="4" />
+            <text class="transect-label" x="805" y="30" text-anchor="start">pitch-me</text>
+          </g>
+
+          <text class="transect-zone" x="130" y="163" text-anchor="middle">PRE</text>
+          <text class="transect-zone" x="410" y="163" text-anchor="middle">DURING</text>
+          <text class="transect-zone" x="730" y="163" text-anchor="middle">POST</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="install-all">
+      <p class="caption">install all four</p>
+      <div class="cmd">
+        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command">copy</button></div>
+        <pre><code>for s in blind-spot-pass deviation-log merge-quiz pitch-me; do
+  mkdir -p ~/.claude/skills/$s
+  curl -sL https://mrcoder.github.io/skills/$s/SKILL.md -o ~/.claude/skills/$s/SKILL.md
+done</code></pre>
+      </div>
+    </div>
   </header>
-  <div class="entry-content">
-    {{ post.content }}
-  </div><!-- /.entry-content -->
-</article><!-- /.hentry -->
-{% endfor %}
 
-<div class="pagination">
-  {% if paginator.previous_page %}
-    {% if paginator.previous_page == 1 %}
-      <a href="{{ site.url }}" class="btn">Previous</a>
-    {% else %}
-      <a href="{{ site.url }}/page{{ paginator.previous_page }}" class="btn">Previous</a>
-    {% endif %}
-  {% else %}
-    Previous
-  {% endif %}
-  <ul class="inline-list">
-    <li>
-      {% if paginator.page == 1 %}
-        <span class="current-page">1</span>
-      {% else %}
-        <a href="{{ site.url }}">1</a>
-      {% endif %}
-    </li>
-    {% for count in (2..paginator.total_pages) %}
-      <li>
-        {% if count == paginator.page %}
-          <span class="current-page">{{ count }}</span>
-        {% else %}
-          <a href="{{ site.url }}/page{{ count }}">{{ count }}</a>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-  {% if paginator.next_page %}
-    <a href="{{ site.url }}/page{{ paginator.next_page }}" class="btn">Next</a>
-  {% else %}
-    Next
-  {% endif %}
-</div><!-- /.pagination -->
+  <section class="entries">
+
+    <article class="entry">
+      <p class="entry-zone"><span class="rule">—</span> pre</p>
+      <div>
+        <h2>blind-spot-pass</h2>
+        <p class="desc">
+          Surfaces what you don't know to ask before you start. Give it your experience
+          level and it greps the codebase's own history — commit messages, docs, past
+          incidents — for the landmines you can't see yet.
+        </p>
+        <ul class="triggers">
+          <li>"blind spot pass"</li>
+          <li>"unknown unknowns"</li>
+          <li>"what am I missing"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for blind-spot-pass">copy</button></div>
+          <pre><code>mkdir -p ~/.claude/skills/blind-spot-pass
+curl -sL https://mrcoder.github.io/skills/blind-spot-pass/SKILL.md \
+  -o ~/.claude/skills/blind-spot-pass/SKILL.md</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry">
+      <p class="entry-zone"><span class="rule">—</span> during</p>
+      <div>
+        <h2>deviation-log</h2>
+        <p class="desc">
+          A live log of every place the plan met an edge case it didn't account for.
+          Picks the conservative option, writes down why, keeps building — so the
+          deviation is visible instead of buried in a diff.
+        </p>
+        <ul class="triggers">
+          <li>"keep a deviation log"</li>
+          <li>"track deviations"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for deviation-log">copy</button></div>
+          <pre><code>mkdir -p ~/.claude/skills/deviation-log
+curl -sL https://mrcoder.github.io/skills/deviation-log/SKILL.md \
+  -o ~/.claude/skills/deviation-log/SKILL.md</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry">
+      <p class="entry-zone zone-post"><span class="rule">—</span> post</p>
+      <div>
+        <h2>merge-quiz</h2>
+        <p class="desc">
+          Blocks the merge until you can pass a quiz on your own change. Reading a diff
+          isn't the same as understanding the behavior it produces — this checks the
+          difference before it ships.
+        </p>
+        <ul class="triggers">
+          <li>auto-triggers before land-pr / ship-branch</li>
+          <li>any non-trivial logic change</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for merge-quiz">copy</button></div>
+          <pre><code>mkdir -p ~/.claude/skills/merge-quiz
+curl -sL https://mrcoder.github.io/skills/merge-quiz/SKILL.md \
+  -o ~/.claude/skills/merge-quiz/SKILL.md</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry">
+      <p class="entry-zone zone-post"><span class="rule">—</span> post</p>
+      <div>
+        <h2>pitch-me</h2>
+        <p class="desc">
+          Packages the prototype, the plan, and the deviation log into one document for
+          the person who wasn't in the room — leads with the demo, answers the
+          objections a reviewer would already have.
+        </p>
+        <ul class="triggers">
+          <li>"pitch me"</li>
+          <li>"buy-in doc"</li>
+          <li>"write this up for review"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for pitch-me">copy</button></div>
+          <pre><code>mkdir -p ~/.claude/skills/pitch-me
+curl -sL https://mrcoder.github.io/skills/pitch-me/SKILL.md \
+  -o ~/.claude/skills/pitch-me/SKILL.md</code></pre>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>Framework: Thariq (@trq212), <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">"A Field Guide to Fable: Finding Your Unknowns"</a></p>
+  <p>This page used to be a blog (2011–2017). It's still in the <a href="https://github.com/MrCoder/mrcoder.github.io/commits/master" target="_blank" rel="noopener">git history</a>.</p>
+</footer>
+
+<script src="assets/script.js"></script>
+</body>
+</html>

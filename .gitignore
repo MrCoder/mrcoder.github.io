@@ -1,9 +1,0 @@
-_site
-.DS_Store
-.idea
-*.sublime-project
-*.sublime-workspace
-codekit-config.json
-node_modules
-Gemfile.lock
-.sass-cache
