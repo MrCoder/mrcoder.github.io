@@ -1,0 +1,4 @@
+interface:
+  display_name: "Search Conversation History"
+  short_description: "Search local AI conversation history"
+  default_prompt: "Use $search-conversation-history to find what we previously decided about this topic."

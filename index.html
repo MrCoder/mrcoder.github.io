@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Field Guide — five Claude Code skills</title>
-<meta name="description" content="Five Claude Code skills for the gap between what you planned and what actually happens: blind-spot-pass, deviation-log, spot-check, merge-quiz, and pitch-me." />
+<title>Field Guide — six AI coding skills</title>
+<meta name="description" content="Six AI coding skills for recovering context and closing the gap between what you planned and what actually happens: search-conversation-history, blind-spot-pass, deviation-log, spot-check, merge-quiz, and pitch-me." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -16,11 +16,12 @@
 <main class="wrap">
 
   <header class="hero">
-    <p class="eyebrow">Field guide · Claude Code skills</p>
+    <p class="eyebrow">Field guide · AI coding skills</p>
     <h1>The map is not the territory</h1>
     <p class="lede">
-      Five skills for the gap between what you planned and what actually happens —
-      one for before you start, one for mid-build, three for when you think you're done.
+      Six skills for recovering context and closing the gap between what you planned
+      and what actually happens — one for recall, one before you start, one for
+      mid-build, three for when you think you're done.
       Built after reading <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq's field guide to Fable</a>.
     </p>
 
@@ -80,18 +81,51 @@
     </div>
 
     <div class="install-all">
-      <p class="caption">install all five</p>
+      <p class="caption">install all six</p>
       <div class="cmd">
-        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command">copy</button></div>
+        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for all six skills">copy</button></div>
         <pre><code>for s in blind-spot-pass deviation-log spot-check merge-quiz pitch-me; do
   mkdir -p ~/.claude/skills/$s
-  curl -sL https://mrcoder.github.io/skills/$s/SKILL.md -o ~/.claude/skills/$s/SKILL.md
+  curl -fLsS https://mrcoder.github.io/skills/$s/SKILL.md -o ~/.claude/skills/$s/SKILL.md
+done
+
+dest=~/.claude/skills/search-conversation-history
+base=https://mrcoder.github.io/skills/search-conversation-history
+mkdir -p "$dest/scripts" "$dest/agents"
+for f in SKILL.md scripts/extract_history.py agents/openai.yaml; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
 done</code></pre>
       </div>
     </div>
   </header>
 
   <section class="entries">
+
+    <article class="entry">
+      <p class="entry-zone zone-recall"><span class="rule">—</span> recall · anytime</p>
+      <div>
+        <h2>search-conversation-history</h2>
+        <p class="desc">
+          Searches Codex, Claude Code, and Cursor histories together — normalising three
+          incompatible local stores into dated, source-linked evidence. Extraction is
+          read-only and disposable; raw conversations are never uploaded.
+        </p>
+        <ul class="triggers">
+          <li>"search conversation history"</li>
+          <li>"how did we handle this before?"</li>
+          <li>"find the earlier discussion about X"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for search-conversation-history">copy</button></div>
+          <pre><code>dest=~/.claude/skills/search-conversation-history
+base=https://mrcoder.github.io/skills/search-conversation-history
+mkdir -p "$dest/scripts" "$dest/agents"
+for f in SKILL.md scripts/extract_history.py agents/openai.yaml; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
+done</code></pre>
+        </div>
+      </div>
+    </article>
 
     <article class="entry">
       <p class="entry-zone"><span class="rule">—</span> pre</p>
@@ -110,7 +144,7 @@ done</code></pre>
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for blind-spot-pass">copy</button></div>
           <pre><code>mkdir -p ~/.claude/skills/blind-spot-pass
-curl -sL https://mrcoder.github.io/skills/blind-spot-pass/SKILL.md \
+curl -fLsS https://mrcoder.github.io/skills/blind-spot-pass/SKILL.md \
   -o ~/.claude/skills/blind-spot-pass/SKILL.md</code></pre>
         </div>
       </div>
@@ -132,7 +166,7 @@ curl -sL https://mrcoder.github.io/skills/blind-spot-pass/SKILL.md \
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for deviation-log">copy</button></div>
           <pre><code>mkdir -p ~/.claude/skills/deviation-log
-curl -sL https://mrcoder.github.io/skills/deviation-log/SKILL.md \
+curl -fLsS https://mrcoder.github.io/skills/deviation-log/SKILL.md \
   -o ~/.claude/skills/deviation-log/SKILL.md</code></pre>
         </div>
       </div>
@@ -156,7 +190,7 @@ curl -sL https://mrcoder.github.io/skills/deviation-log/SKILL.md \
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for spot-check">copy</button></div>
           <pre><code>mkdir -p ~/.claude/skills/spot-check
-curl -sL https://mrcoder.github.io/skills/spot-check/SKILL.md \
+curl -fLsS https://mrcoder.github.io/skills/spot-check/SKILL.md \
   -o ~/.claude/skills/spot-check/SKILL.md</code></pre>
         </div>
       </div>
@@ -178,7 +212,7 @@ curl -sL https://mrcoder.github.io/skills/spot-check/SKILL.md \
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for merge-quiz">copy</button></div>
           <pre><code>mkdir -p ~/.claude/skills/merge-quiz
-curl -sL https://mrcoder.github.io/skills/merge-quiz/SKILL.md \
+curl -fLsS https://mrcoder.github.io/skills/merge-quiz/SKILL.md \
   -o ~/.claude/skills/merge-quiz/SKILL.md</code></pre>
         </div>
       </div>
@@ -201,7 +235,7 @@ curl -sL https://mrcoder.github.io/skills/merge-quiz/SKILL.md \
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for pitch-me">copy</button></div>
           <pre><code>mkdir -p ~/.claude/skills/pitch-me
-curl -sL https://mrcoder.github.io/skills/pitch-me/SKILL.md \
+curl -fLsS https://mrcoder.github.io/skills/pitch-me/SKILL.md \
   -o ~/.claude/skills/pitch-me/SKILL.md</code></pre>
         </div>
       </div>
