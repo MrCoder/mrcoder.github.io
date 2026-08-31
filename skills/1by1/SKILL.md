@@ -17,6 +17,14 @@ Treat each listed item as separately approval-gated. Read-only investigation and
 
 For every item, state a clear, numbered recommendation before asking for approval. Make option **1. Recommended** the preferred path; give the exact action and the evidence-based reason. Number any viable alternative or skip path. Do not make the user infer the recommendation from a neutral finding or an unnumbered question.
 
+**Never make the user remember what an item is.** Every time you name an item — a
+position ("item 3", "第 3 条"), a branch, a worktree, a GitHub issue or PR number, a
+ticket, a file path — restate in a short clause what it is or does. Do this on every
+mention, not only the first. Write `PR #542 — classify Forge macros by custom content
+ID` or `branch fix/kvs-timeout — retry the KVS read after a 5s timeout`, never a bare
+`#542` or `item 3`. The user is judging one item at a time and is not holding the
+earlier listing in memory.
+
 If the user declines or gives a different instruction, record the item as skipped or follow that instruction, then move to the next item only after reporting the result.
 
 ## Per-item loop
@@ -26,6 +34,11 @@ For each item, in order:
 1. **Re-verify current state.** Don't trust a summary written earlier in the conversation — re-check (`git status`, `gh pr view`, re-read the file). State drifts between the listing step and the item's turn.
 2. **Check it's still valuable, not just mechanically doable.** Before investing effort: has something else already superseded this item? Does main/upstream already contain its useful part under a different name? Does its own history admit abandonment (a later commit saying "supersedes X")? A clean merge is not evidence of continued relevance — check separately.
    **Before recommending deletion, inspect the actual content first.** Do not infer that a file is disposable from its name, size, ignored status, or a structural/key-only scan. Read the text, or use the appropriate safe viewer/parser for binary or sensitive material; identify whether it is source, evidence, a transcript, a cache, or a duplicate of a durable artifact. State that content-based finding in the numbered recommendation. Redact secrets and customer data from the report, but do not skip the inspection because they may be present.
+   **Uncommitted work you did not create is not yours to resolve.** If an item carries
+   uncommitted changes from another session or agent, do not delete them, do not commit
+   them, and do not push them on their author's behalf — that tree may be in active use
+   right now. Report the modified paths and the last-modified time, and recommend leaving
+   the item alone. Recency is the signal: recent uncommitted work is live work.
 3. **Make a numbered recommendation, then wait for approval before acting.** Name the item and present **1. Recommended** with the exact state-changing action and its evidence-based rationale; number any viable alternative or skip path. Then wait for explicit approval for that item. Do this even when the action is mechanical and low-risk. **For a PR item, "done" means merged or closed on GitHub — pushing a rebased branch with green tests is not the finish line.** After an approved push, check CI (`gh pr checks`); once green, make a new numbered recommendation for the next required state-changing action for that same PR rather than silently treating it as complete. Green CI proves the code is safe to land; it says nothing about whether the PR is still worth landing. Never batch-approve a queue: every merge or close needs its own approval.
 4. **Stop and ask for a decision when judgment is required** — in addition to the mandatory approval gate:
    - a conflict lands in code the item's own description calls high-risk, or in a subsystem multiple people/sessions touched independently
@@ -42,6 +55,16 @@ When investigation is cheap (a dry-run, a `--dry-run` flag, a lint pass), rank t
 ## Mid-stream interruption
 
 If the user asks a question or gives a new instruction mid-item, answer/act on it directly, then resume the sequence from where it paused — don't restart from item 1, don't ask "should I continue?". Plain "continue" means resume the loop.
+
+After a restart or a context loss — a crashed session, a compacted conversation, a new
+turn that begins mid-batch — do not assume the last reported state still holds. Name the
+current item, re-establish what is already done for it with fresh evidence (`git status`,
+`gh pr view`), and continue only then. A summary written before the interruption is a
+claim about the past, not the current state.
+
+The batch itself can change mid-run. If the user removes an item, adds one, or narrows
+the scope, stop work on any removed item at once, report what was already done to it, and
+restate the remaining list before the next action.
 
 ## End of run
 
