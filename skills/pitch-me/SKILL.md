@@ -22,7 +22,7 @@ Getting approval is a distinct deliverable from the code itself. A reviewer star
    - What tradeoffs were made and why (draw on Deviations)
    - What was considered and rejected, if anything (draw on brainstorming output)
    - What's out of scope or could still go wrong (draw on `blind-spot-pass` findings if that ran)
-4. Build it as an HTML artifact (see `artifact-design`) unless the destination is a plain-text Slack message, in which case draft the message directly.
+4. Build it as one self-contained HTML page (see `artifact-design`) — a single file, not a multi-page site with its own nav or routes — unless the user explicitly asks for a full site. Skip the artifact and draft the message directly if the destination is plain-text Slack.
 5. This produces a draft only. Posting it anywhere — Slack, email, a PR comment — needs the user's explicit go-ahead. Never auto-send.
 
 ## When NOT to apply
