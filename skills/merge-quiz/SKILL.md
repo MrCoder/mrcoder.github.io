@@ -1,6 +1,6 @@
 ---
 name: merge-quiz
-description: MUST use before the first merge-adjacent action, meaning creating or readying a PR for merge, running land-pr, ship-branch, or submit-branch, or pushing to main, after any session that includes a non-trivial logic change such as a new feature, a bugfix touching business logic, or a multi-file refactor. Not required for docs-only, config-only, or single-line changes. Generates an HTML report and quiz on what changed, and the user must pass it before the merge step proceeds.
+description: MUST use before the first merge-adjacent action, meaning creating or readying a PR for merge, running land-pr, ship-branch, or submit-branch, or pushing to main, after any session that includes a non-trivial logic change such as a new feature, a bugfix touching business logic, or a multi-file refactor. Not required for docs-only, config-only, or single-line changes. Generates an HTML report and multiple-choice quiz on what changed, and the user must pass it before the merge step proceeds.
 ---
 
 # Merge Quiz
@@ -24,10 +24,10 @@ Docs-only, config-only, dependency-bump-only, or single-line changes. If genuine
 1. Before the first merge-adjacent action, stop.
 2. Build an HTML artifact (see `artifact-design` skill) with two parts:
    - **Report**: plain-English account of what changed and why, the shape of the solution, and any deviations from plan (pull from `deviation-log.md` if one exists).
-   - **Quiz**: 3-6 questions on the actual behavior of the change — not "which file did you touch" trivia, but "what happens if X", "why Y over Z", "what edge case does this NOT handle". Multiple choice or short answer.
+   - **Quiz**: 3-6 actual-behavior questions — not file-name trivia. Every question must be multiple-choice, contain 3-4 options, and have exactly one correct answer. Short-answer or free-form questions are not allowed.
 3. Have the user answer. Grade honestly — don't soften a wrong answer into a pass.
 4. Passed: proceed to the merge-adjacent action.
-5. Not passed: explain the missed point using the actual code, not a re-statement of the report, then re-quiz only on the missed items.
+5. Not passed: explain the missed point using the actual code, not a re-statement of the report, then re-quiz only on the missed items using multiple-choice questions.
 
 ## Relationship to verification-before-completion
 
