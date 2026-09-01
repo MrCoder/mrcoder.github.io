@@ -345,6 +345,7 @@ h1 {
   gap: 1.75rem;
   padding: 2.4rem 0;
   border-bottom: 1px solid var(--grid-line);
+  scroll-margin-top: 1.5rem;
 }
 
 .entry:first-child {
@@ -378,6 +379,16 @@ h1 {
   font-size: 1.55rem;
   margin: 0 0 0.55rem;
   letter-spacing: -0.005em;
+}
+
+.entry h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.entry h2 a:hover,
+.entry:target h2 a {
+  color: var(--pencil-red);
 }
 
 .entry p.desc {
