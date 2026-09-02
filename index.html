@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Field Guide — seven AI coding skills</title>
-<meta name="description" content="Seven AI coding skills for recovering context and closing the gap between what you planned and what actually happens: search-conversation-history, 1by1, blind-spot-pass, deviation-log, spot-check, merge-quiz, and pitch-me." />
+<title>Field Guide — eight AI coding skills</title>
+<meta name="description" content="Eight AI coding skills for recovering context, creating diagrams, and closing the gap between what you planned and what actually happens: search-conversation-history, diagram, 1by1, blind-spot-pass, deviation-log, spot-check, merge-quiz, and pitch-me." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -19,9 +19,10 @@
     <p class="eyebrow">Field guide · AI coding skills</p>
     <h1>The map is not the territory</h1>
     <p class="lede">
-      Seven skills for recovering context and closing the gap between what you planned
-      and what actually happens — one for recall, one for working a queue, one before
-      you start, one for mid-build, three for when you think you're done.
+      Eight skills for recovering context, making diagrams, and closing the gap between
+      what you planned and what actually happens — one for recall, one for visualising,
+      one for working a queue, one before you start, one for mid-build, three for when
+      you think you're done.
       Built after reading <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq's field guide to Fable</a>.
     </p>
 
@@ -81,12 +82,19 @@
     </div>
 
     <div class="install-all">
-      <p class="caption">install all seven</p>
+      <p class="caption">install all eight</p>
       <div class="cmd">
-        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for all seven skills">copy</button></div>
+        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for all eight skills">copy</button></div>
         <pre><code>for s in 1by1 blind-spot-pass deviation-log spot-check merge-quiz pitch-me; do
   mkdir -p ~/.claude/skills/$s
   curl -fLsS https://mrcoder.github.io/skills/$s/SKILL.md -o ~/.claude/skills/$s/SKILL.md
+done
+
+dest=~/.claude/skills/diagram
+base=https://mrcoder.github.io/skills/diagram
+mkdir -p "$dest/references"
+for f in SKILL.md references/diagram-rules.md references/mermaid-syntax.md references/zenuml-syntax.md; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
 done
 
 dest=~/.claude/skills/search-conversation-history
@@ -121,6 +129,34 @@ done</code></pre>
 base=https://mrcoder.github.io/skills/search-conversation-history
 mkdir -p "$dest/scripts" "$dest/agents"
 for f in SKILL.md scripts/extract_history.py agents/openai.yaml; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
+done</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry" id="diagram">
+      <p class="entry-zone zone-recall"><span class="rule">—</span> make · anytime</p>
+      <div>
+        <h2><a href="#diagram">diagram</a></h2>
+        <p class="desc">
+          Generates sequence diagrams as ZenUML and other diagram types as Mermaid,
+          with optional image rendering. It also improves existing SVG diagrams under
+          a fidelity contract: preserve the business structure, route connectors with
+          deterministic geometry, and verify the rendered result instead of silently
+          redesigning it.
+        </p>
+        <ul class="triggers">
+          <li>"draw a diagram"</li>
+          <li>"show me the flow"</li>
+          <li>"improve this SVG"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for diagram">copy</button></div>
+          <pre><code>dest=~/.claude/skills/diagram
+base=https://mrcoder.github.io/skills/diagram
+mkdir -p "$dest/references"
+for f in SKILL.md references/diagram-rules.md references/mermaid-syntax.md references/zenuml-syntax.md; do
   curl -fLsS "$base/$f" -o "$dest/$f"
 done</code></pre>
         </div>
