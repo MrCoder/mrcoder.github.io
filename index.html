@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Field Guide — eight AI coding skills</title>
-<meta name="description" content="Eight AI coding skills for recovering context, creating diagrams, and closing the gap between what you planned and what actually happens: search-conversation-history, diagram, 1by1, blind-spot-pass, deviation-log, spot-check, merge-quiz, and pitch-me." />
+<title>Field Guide — ten AI coding skills</title>
+<meta name="description" content="Ten AI coding skills for recovering context, creating diagrams, working safely while away, and closing the gap between what you planned and what actually happens: search-conversation-history, diagram, 1by1, unattended, overnight, blind-spot-pass, deviation-log, spot-check, merge-quiz, and pitch-me." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -19,10 +19,10 @@
     <p class="eyebrow">Field guide · AI coding skills</p>
     <h1>The map is not the territory</h1>
     <p class="lede">
-      Eight skills for recovering context, making diagrams, and closing the gap between
-      what you planned and what actually happens — one for recall, one for visualising,
-      one for working a queue, one before you start, one for mid-build, three for when
-      you think you're done.
+      Ten skills for recovering context, making diagrams, working safely while you're
+      away, and closing the gap between what you planned and what actually happens —
+      one for recall, one for visualising, one for working a queue, two for autonomous
+      runs, one before you start, one for mid-build, three for when you think you're done.
       Built after reading <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq's field guide to Fable</a>.
     </p>
 
@@ -82,9 +82,9 @@
     </div>
 
     <div class="install-all">
-      <p class="caption">install all eight</p>
+      <p class="caption">install all ten</p>
       <div class="cmd">
-        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for all eight skills">copy</button></div>
+        <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for all ten skills">copy</button></div>
         <pre><code>for s in 1by1 blind-spot-pass deviation-log spot-check merge-quiz pitch-me; do
   mkdir -p ~/.claude/skills/$s
   curl -fLsS https://mrcoder.github.io/skills/$s/SKILL.md -o ~/.claude/skills/$s/SKILL.md
@@ -102,7 +102,18 @@ base=https://mrcoder.github.io/skills/search-conversation-history
 mkdir -p "$dest/scripts" "$dest/agents"
 for f in SKILL.md scripts/extract_history.py agents/openai.yaml; do
   curl -fLsS "$base/$f" -o "$dest/$f"
-done</code></pre>
+done
+
+dest=~/.claude/skills/unattended
+base=https://mrcoder.github.io/skills/unattended
+mkdir -p "$dest/scripts" "$dest/templates"
+for f in SKILL.md READINESS.md LOOP.md scripts/run_guard.py templates/PLAN.md templates/REPORT.html templates/state.json; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
+done
+
+mkdir -p ~/.claude/skills/overnight
+curl -fLsS https://mrcoder.github.io/skills/overnight/SKILL.md \
+  -o ~/.claude/skills/overnight/SKILL.md</code></pre>
       </div>
     </div>
   </header>
@@ -185,6 +196,64 @@ done</code></pre>
           <pre><code>mkdir -p ~/.claude/skills/1by1
 curl -fLsS https://mrcoder.github.io/skills/1by1/SKILL.md \
   -o ~/.claude/skills/1by1/SKILL.md</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry" id="unattended">
+      <p class="entry-zone zone-recall"><span class="rule">—</span> run · away</p>
+      <div>
+        <h2><a href="#unattended">unattended</a></h2>
+        <p class="desc">
+          Keeps useful work moving for a bounded time while you're away. It starts slow
+          CI, builds, and browser checks early, limits itself to two workstreams, guards
+          token allowance before every dispatch, and leaves a live evidence-backed HTML
+          report. Missing credentials or telemetry narrow the run; they do not waste it.
+        </p>
+        <ul class="triggers">
+          <li>"work on this unattended"</li>
+          <li>"keep going while I'm AFK"</li>
+          <li>"work on this for two hours"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for unattended">copy</button></div>
+          <pre><code>dest=~/.claude/skills/unattended
+base=https://mrcoder.github.io/skills/unattended
+mkdir -p "$dest/scripts" "$dest/templates"
+for f in SKILL.md READINESS.md LOOP.md scripts/run_guard.py templates/PLAN.md templates/REPORT.html templates/state.json; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
+done</code></pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry" id="overnight">
+      <p class="entry-zone zone-recall"><span class="rule">—</span> run · all night</p>
+      <div>
+        <h2><a href="#overnight">overnight</a></h2>
+        <p class="desc">
+          Extends unattended work into an eight-hour all-night profile. It checks that
+          credentials, browsers, runners, long waits, and the machine itself can survive
+          until morning, then applies the same bounded allowance and evidence rules and
+          writes a morning report.
+        </p>
+        <ul class="triggers">
+          <li>"work on this overnight"</li>
+          <li>"run this all night"</li>
+          <li>"have this ready by morning"</li>
+        </ul>
+        <div class="cmd">
+          <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for overnight and its unattended core">copy</button></div>
+          <pre><code>dest=~/.claude/skills/unattended
+base=https://mrcoder.github.io/skills/unattended
+mkdir -p "$dest/scripts" "$dest/templates"
+for f in SKILL.md READINESS.md LOOP.md scripts/run_guard.py templates/PLAN.md templates/REPORT.html templates/state.json; do
+  curl -fLsS "$base/$f" -o "$dest/$f"
+done
+
+mkdir -p ~/.claude/skills/overnight
+curl -fLsS https://mrcoder.github.io/skills/overnight/SKILL.md \
+  -o ~/.claude/skills/overnight/SKILL.md</code></pre>
         </div>
       </div>
     </article>

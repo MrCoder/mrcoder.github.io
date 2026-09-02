@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="{{language-code}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{profile}} report — {{run-id}}</title>
+  <style>
+    :root{color-scheme:light dark;font:16px/1.5 system-ui,sans-serif;--line:#8886;--ok:#18794e;--warn:#a15c00;--bad:#b42318}
+    body{max-width:1080px;margin:2.5rem auto;padding:0 1.25rem} header{border-bottom:1px solid var(--line);padding-bottom:1rem}
+    h1,h2,h3{line-height:1.2} h2{margin-top:2.25rem}.badges,.meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem}
+    .badge{padding:.2rem .6rem;border:1px solid var(--line);border-radius:999px}.ok{background:var(--ok);color:#fff}.warn{background:var(--warn);color:#fff}.bad{background:var(--bad);color:#fff}
+    .panel,.card,article,figure,details{border:1px solid var(--line);border-radius:.65rem;padding:1rem}.panel{margin:1rem 0}.action{border-width:2px;border-color:var(--warn)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem}.comparison{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1rem}
+    figure{margin:1rem 0}img,video{display:block;max-width:100%;height:auto;border-radius:.4rem}figcaption{margin-top:.65rem}small,.muted{opacity:.78}
+    table{border-collapse:collapse;width:100%;display:block;overflow:auto}th,td{text-align:left;border-bottom:1px solid var(--line);padding:.55rem;vertical-align:top}
+    a{color:#2675bf}code{font-size:.9em}summary{cursor:pointer;font-weight:650}.status-pair{display:flex;gap:.6rem;flex-wrap:wrap}
+    @media print{body{max-width:none;margin:0}details{break-inside:avoid}details>*{display:block!important}video{display:none}a{color:inherit}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badges">
+      <span id="run-status" class="badge">{{RUNNING | FINISHED}}</span>
+      <span id="outcome-status" class="badge {{ok | warn | bad}}">Outcome: {{complete | partial | failed}}</span>
+      <span id="attention-status" class="badge">Attention: {{none | decision | action}}</span>
+    </div>
+    <h1>{{final objective}}</h1>
+    <p>{{one-sentence result}}</p>
+    <div class="meta">
+      <span>Started: <time>{{start}}</time></span><span>Planned end: <time>{{end-at}}</time></span>
+      <span>Last updated: <time>{{updated}}</time></span><span>Actual end: <time>{{actual-end | running}}</time></span>
+      <span>End reason: {{running | objective complete | time | allowance | user stop | no authorized work}}</span>
+      <span>Remaining: {{count}}</span>
+    </div>
+    <p><strong>Now:</strong> {{current work}} · <strong>Waiting:</strong> {{waiting work}}</p>
+  </header>
+
+  <!-- Remove this section when Attention is none. -->
+  <section id="your-action" class="panel action">
+    <h2>Your action</h2>
+    <p>{{short action and impact}} <a href="#decision-1">Review decision 1</a>.</p>
+  </section>
+
+  <section id="at-a-glance">
+    <h2>At a glance</h2>
+    <div class="grid">
+      <div class="card"><strong>Outcomes</strong><br>{{complete / partial / failed counts}}</div>
+      <div class="card"><strong>Verification</strong><br>{{verified / failed / blocked / skipped counts}}</div>
+      <div class="card"><strong>Account usage</strong><br>{{start → high-water → end; allowance; resets}}</div>
+      <div class="card"><strong>Models</strong><br>{{coordinator; worker counts; escalations}}</div>
+    </div>
+  </section>
+
+  <!-- Remove when the user's scope did not materially change. -->
+  <section id="scope-updates">
+    <h2>Scope updates</h2>
+    <ul><li>{{material requirement or context added during the run}}</li></ul>
+  </section>
+
+  <section id="outcomes">
+    <h2>Outcomes</h2>
+    <article>
+      <h3>{{outcome or workstream}}</h3>
+      <div class="status-pair"><span class="badge">Work: {{status}}</span><span class="badge">Verification: {{VERIFIED | FAILED | BLOCKED | SKIPPED | NOT APPLICABLE}}</span></div>
+      <p>{{user value and final result}}</p>
+
+      <!-- A demoable functional outcome requires a final-revision Evidence figure. -->
+      <figure class="evidence" data-kind="Evidence" data-revision="{{revision}}" data-captured-at="{{timestamp}}">
+        <img src="evidence/{{final-image}}.png" alt="{{meaningful description of the observed UI}}">
+        <figcaption>
+          <strong>Evidence.</strong> <span class="observation">{{what the agent observed}}</span>
+          <span class="acceptance">{{how this supports the acceptance conclusion}}</span>
+          <span class="limitation">{{visible limitation, or none}}</span>
+          <small>{{environment}} · {{capture method}} · {{revision}} · {{timestamp}}</small>
+        </figcaption>
+      </figure>
+
+      <!-- Keep this comparison only when an earlier success and final failure both matter. -->
+      <div class="comparison">
+        <figure class="evidence" data-kind="Evidence" data-revision="{{good revision}}" data-captured-at="{{good timestamp}}">
+          <h4>Last known good</h4><img src="evidence/{{last-known-good}}.png" alt="{{successful state observed earlier}}">
+          <figcaption>{{observation, acceptance meaning, and limitations}}<br><small>{{environment · method · revision · timestamp}}</small></figcaption>
+        </figure>
+        <figure class="evidence" data-kind="Evidence" data-revision="{{final revision}}" data-captured-at="{{final timestamp}}">
+          <h4>Final observed state</h4><img src="evidence/{{final-failure}}.png" alt="{{failure visible in the final state}}">
+          <figcaption>{{failure observed, its acceptance impact, and limitations}}<br><small>{{environment · method · revision · timestamp}}</small></figcaption>
+        </figure>
+      </div>
+
+      <!-- Keep only when temporal media is materially clearer and a validated capability exists. -->
+      <figure data-kind="{{Evidence | Illustration}}" data-revision="{{revision}}" data-captured-at="{{timestamp}}">
+        <video controls preload="metadata" poster="evidence/{{video-poster}}.png"><source src="evidence/{{short-demo}}.mp4" type="video/mp4"></video>
+        <figcaption>{{what the recording proves, or why this illustration helps}} <a href="evidence/{{short-demo}}.mp4">Open video</a>.</figcaption>
+      </figure>
+
+      <details><summary>Tasks, acceptance, and evidence</summary>
+        <table><thead><tr><th>Task</th><th>Acceptance</th><th>Result</th><th>Evidence</th></tr></thead>
+          <tbody><tr><td>{{T1}}</td><td>{{observable criterion}}</td><td>{{result}}</td><td><a href="evidence/{{artifact}}">{{artifact}}</a></td></tr></tbody></table>
+      </details>
+    </article>
+  </section>
+
+  <!-- Never remove unresolved verification gaps or unfinished work. -->
+  <section id="unresolved"><h2>Unresolved risks and remaining work</h2><ul><li>{{risk, impact, and next useful step}}</li></ul></section>
+
+  <section id="deliverables"><h2>Deliverables</h2>
+    <table><thead><tr><th>Type</th><th>Deliverable</th><th>Status</th></tr></thead>
+      <tbody><tr><td>{{commit | PR | CI | deploy | file}}</td><td><a href="{{relative path or approved URL}}">{{purpose-labelled name}}</a></td><td>{{status}}</td></tr></tbody></table>
+  </section>
+
+  <!-- Remove when no user decision remains. -->
+  <section id="decisions"><h2>Decisions</h2>
+    <article id="decision-1"><h3>{{decision question}}</h3><p>{{impact}} Agent continued with: {{safe interim action}}.</p>
+      <p><strong>Recommendation:</strong> 1. {{recommended answer}}</p><ol><li>{{recommended option}}</li><li>{{alternative}}</li></ol>
+    </article>
+  </section>
+
+  <section id="usage-models"><h2>Usage and model details</h2>
+    <div class="grid"><div class="card"><strong>Account meter</strong><br>{{start / high-water / end}}<br>{{allowance, resets, telemetry and estimate gaps}}</div>
+      <div class="card"><strong>Routing</strong><br>{{coordinator}}<br>{{tasks by worker; escalation evidence}}</div></div>
+    <p class="muted">Account movement may include other sessions and is not attributed entirely to this run.</p>
+  </section>
+
+  <section id="milestones"><h2>Key milestones</h2><ol><li><time>{{time}}</time> — {{material wait, anomaly, or outcome}}</li></ol></section>
+  <footer><p>Detailed trace: <a href="journal.md">journal</a>. Decisions archive: <a href="DECISIONS-FOR-USER.md">decisions</a>.</p></footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "run_status": "readiness",
+  "run_id": "{{YYYY-MM-DD-HHMM}}",
+  "profile": "unattended",
+  "objective": "{{requested outcome}}",
+  "repository": "{{absolute path}}",
+  "base_branch": "main",
+  "coordinator_model": "{{current model}}",
+  "external_ceiling": ["branch-push", "pr-write", "ci"],
+  "scope_updates": [],
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "{{task}}",
+      "status": "pending",
+      "model": null,
+      "evidence": []
+    }
+  ],
+  "decisions_for_user": 0,
+  "report_updated_at": null
+}
