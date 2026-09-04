@@ -23,7 +23,7 @@ Respect the user's explicit DSL choice if they specify one.
 2. **If from code** - Glob to find files, Read to examine, Grep to trace relationships
 3. **Choose DSL** per table above
 4. **Read gotchas** - `references/zenuml-syntax.md` or `references/mermaid-syntax.md` in this skill directory
-   - Improving or transforming an **existing SVG** diagram instead of generating one → read `references/diagram-rules.md` and follow its scope, execution split, and verification steps
+   - Generating, improving, or transforming an **SVG** diagram → read `references/diagram-rules.md` in full and follow its scope, semantic-palette, geometry, and verification requirements. This includes the default `1px` connector width rule.
 5. **Generate DSL** and **write to `.md` file**
 6. **Render image** (optional) - see "Image Rendering" section below
 7. **Tell the user** the file path (and image path / renderer URL if rendered)
@@ -104,7 +104,7 @@ These are the things LLMs get wrong — read `references/zenuml-syntax.md` for d
 
 ## Diagram Rules (SVG)
 
-`references/diagram-rules.md` holds the reusable Diagram Rules for SVG diagrams: preserve every business node and relationship unless redesign is authorized; decision-node text capacity (diamond vs long-text hexagon); rectangular node corners, capsule exception, `labelBox` size tiers (S/M/L/XL); semantic background palette with 4.5:1 contrast pairs; script-first orthogonal routing (ports, tracks, `r=5` bends, arrow tip on target edge, one full path per relationship, crossing detection); AI limited to genre/semantic judgement; four-step verification. These rules target SVG; they do not govern ZenUML/Mermaid DSL generation above.
+`references/diagram-rules.md` is the complete, canonical Diagram Rules source for SVG diagrams. It covers directed-connector routing and default 1px line width, markers and target-edge termination, box/grid/text layout, semantic colour palettes, decision and capsule exceptions, `labelBox` tiers, script-first geometry, and render→crop→inspect iteration. Preserve business semantics unless redesign is authorized. These rules target SVG; they do not govern ZenUML/Mermaid DSL generation above.
 
 ## Quality
 
