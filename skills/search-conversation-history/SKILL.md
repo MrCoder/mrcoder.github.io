@@ -5,7 +5,19 @@ description: Search local Codex, Claude Code, and Cursor conversation histories 
 
 # Search Conversation History
 
-Search all three local history sources. The visible-conversation core is independent of every source format; source adapters only normalize their local history into the shared record contract. Use AI only for semantic matching and synthesis.
+Search all three local history sources. The `fast-conversation-search` MCP tools are the default path. The extractor and per-source workers below are the fallback for when that tool is unavailable, its index is stale, or a request needs raw records the visible index excludes by contract.
+
+## Search visible conversation
+
+Call the MCP tools first: `search_visible_conversations` (literal substring search) and `read_conversation_context` (surrounding messages for one hit), served by the `fast-conversation-search` server registered in both `~/.claude.json` and `~/.codex/config.toml`. They read a persistent, local-only trigram index built from normalized `role: user`/`role: assistant` records; reasoning, tool calls, tool results, system instructions, and source-specific metadata are excluded by contract. No setup needed when the server answers a query.
+
+If a call reports the index is empty, or the server is not connected in this session, rebuild it with the same binary, at the exact `--database` path that server's own config passes it (read that path from the config rather than assuming the binary's own default — they differ):
+
+```bash
+vcs index --database "<the --database value from that mcpServers/mcp_servers entry>" --days 30
+```
+
+Then retry the MCP call. Only fall back to Extract below if `vcs` itself is unavailable.
 
 ## Extract
 
@@ -18,26 +30,7 @@ python3 ~/.claude/skills/search-conversation-history/scripts/extract_history.py 
 
 Read `$OUTPUT_DIR/summary.json`. Continue when a source is missing or unavailable, but report that limitation. Never modify a history store.
 
-## Index and search visible conversation
-
-The default search path is the standalone, local-only visible-conversation core. It indexes only normalized records with `role: user` or `role: assistant`; reasoning, tool calls, tool results, system instructions, and source-specific metadata are excluded by contract.
-
-Synchronize each normalized source into the persistent index (the index can always be rebuilt; original histories are never changed):
-
-```bash
-VISIBLE_INDEX="$HOME/.local/share/visible-conversation-search/index.sqlite"
-CORE="$HOME/.codex/skills/search-conversation-history/core/visible_conversation_search.py"
-
-python3 "$CORE" --database "$VISIBLE_INDEX" sync --scope codex --input "$OUTPUT_DIR/codex.jsonl"
-python3 "$CORE" --database "$VISIBLE_INDEX" sync --scope claude --input "$OUTPUT_DIR/claude.jsonl"
-python3 "$CORE" --database "$VISIBLE_INDEX" sync --scope cursor --input "$OUTPUT_DIR/cursor.jsonl"
-python3 "$CORE" --database "$VISIBLE_INDEX" serve \
-  --socket "$HOME/.local/share/visible-conversation-search/search.sock"
-```
-
-Keep this local service running while searching. A product or host integration connects directly to the Unix socket and sends one JSON line per query, for example `{"op":"search","query":"<query>","limit":50}`. The service only listens on the current user's filesystem socket; it does not expose a network port. The core performs persistent trigram candidate search and exact case-insensitive substring verification. Results are ordered by time, source, session, and original insertion order. Prefer distinctive phrases or terms; broad terms can return many valid records and receive less acceleration.
-
-If the 30-day evidence is absent, weak, or materially incomplete, rerun with `--all` into a new directory and resynchronize the affected source scopes. Do not expand merely because one source is unavailable when the available sources answer the question conclusively.
+If the 30-day evidence is absent, weak, or materially incomplete, rerun with `--all` into a new directory. Do not expand merely because one source is unavailable when the available sources answer the question conclusively.
 
 ## Search in parallel
 
