@@ -39,8 +39,8 @@ it early.
 - Usage is account-wide: other sessions count. A run gets its own allowance, not ownership of the
   observed account change. A reset restarts allowance tracking but never extends `end_at`.
 - `run_guard.py` controls new token-consuming dispatches. In-flight work may overshoot. At an
-  allowance boundary, preserve useful waits and resume after an in-window reset. At `end_at`, stop
-  taking new work and finish the current safe atomic step.
+  allowance boundary, preserve useful waits and resume after an in-window reset. Only `end_at` or
+  the user's explicit stop ends a run; out of authorized work means `idle`, never `finished`.
 - Run at most two independent workstreams; a waiting stream counts.
 - Default external ceiling allows feature-branch push, PR create/update, and CI. Merge, production,
   tracker writes, purchases, messages, and new external resources require explicit authorization.
