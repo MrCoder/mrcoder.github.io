@@ -333,9 +333,10 @@ curl -fLsS https://mrcoder.github.io/skills/spot-check/SKILL.md \
       <div>
         <h2><a href="#merge-quiz">merge-quiz</a></h2>
         <p class="desc">
-          Requires a one-at-a-time quiz on your own change before merging. Reading a
-          diff isn't the same as understanding the behavior it produces — a focused
-          re-quiz is required only when every answer is wrong.
+          Requires a one-at-a-time, numbered quiz on your own change before merging,
+          unless the user explicitly skips it. Reading a diff isn't the same as
+          understanding the behavior it produces — a focused re-quiz is required only
+          when every answer is wrong.
         </p>
         <ul class="triggers">
           <li>auto-triggers before land-pr / ship-branch</li>
