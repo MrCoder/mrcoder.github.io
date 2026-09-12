@@ -5,7 +5,7 @@ description: Walk through a batch of items sequentially — one item fully handl
 
 # 1by1
 
-One item at a time: re-verify → check it is still worth doing → recommend one action → wait for approval → act or flag → report → next. No batching, no parallel fan-out, no option menus.
+One item at a time: re-verify → check it is still worth doing → recommend one action → apply existing authorisation → act or flag → report → next. No batching, no parallel fan-out, no option menus.
 
 ## Preconditions
 
@@ -13,9 +13,9 @@ Needs a list with enough identity per item (name, id, path) to act on. If none e
 
 ## The gate
 
-Every item is separately approval-gated.
+Respect the user's actual authorisation while keeping the review one item at a time. Read-only investigation and already authorised reversible edits, tests and record updates proceed without another approval. Explicit authorisation for a recipient or frozen batch persists across items and skill invocations; a general request to review does not authorise sending messages or unrelated destructive actions.
 
-**Wait for approval, per item.** Read-only investigation and re-verification may proceed. Before any state-changing action — including a mechanical, low-risk one such as testing, pushing, renaming, editing, moving, deleting, committing, merging, or closing — state the exact action and wait for explicit approval of that named item. Approval of an earlier item, or a general "continue", is not approval of this one.
+If the next action is outside that scope, prepare a concrete reviewable result and ask only for the necessary additional permission. Approval of one customer does not extend to others merely because their roles match. Do not turn a continuous authorised workflow into repeated confirmation questions.
 
 **One action per item. No menu.** State the single action you judge correct, with its evidence-based reason, and ask for approval of that one action. `1by1` already carries the user's decision to work the list in order, so re-offering the order, the skip path, or a "do nothing" branch as choices returns a decision the user has already made.
 
@@ -33,7 +33,7 @@ If the user declines or gives a different instruction, record the item as skippe
 2. **Check it is still worth doing.** Has other work superseded it? Does upstream already contain its useful part under another name? Does its own history admit abandonment (a later commit saying "supersedes X")? A clean merge is not evidence of continued relevance.
 3. **Inspect before recommending deletion.** Never infer that a file is disposable from its name, size, or ignored status. Read it, or use a safe viewer or parser for binary or sensitive material, and classify it: source, evidence, transcript, cache, or duplicate of a durable artifact. State that content-based finding in the recommendation. Redact secrets and customer data from the report; do not skip the inspection because they may be present.
 4. **Leave another session's uncommitted work alone.** Do not delete, commit, or push uncommitted changes you did not create — that tree may be in active use right now. Report the modified paths and their last-modified time, and recommend leaving the item alone.
-5. **Propose, wait, then act.** Apply *The gate* to this item. An item is done at its terminal state, not at a green intermediate one: a PR is done when merged or closed, not when CI passes on a pushed branch. After an approved push, check CI, then recommend the next action on that same item.
+5. **Recommend and apply existing authorisation.** Apply *The gate* to this item; ask only when additional permission is necessary. An item is done at its terminal state, not at a green intermediate one: a PR is done when merged or closed, not when CI passes on a pushed branch. After an approved push, check CI, then recommend the next action on that same item.
 6. **Stop for a decision** when a conflict lands in code the item's own description calls high-risk, or in a subsystem several sessions reworked independently; when the dependency chain turns out broken or superseded; or when the action is destructive, irreversible, or externally visible beyond what is authorized. Present the evidence and one recommended action, then wait. Number alternatives here only under the materially-different-end-state test in *The gate*. Do not fabricate what happens next.
 7. **Report in a few lines, then move on.** What changed, why, verification evidence (test count, CI link), and the next recommendation if an action remains. Do not re-summarize the whole batch after every item.
 
