@@ -1,0 +1,48 @@
+{
+  "binaries": {
+    "darwin-arm64": {
+      "path": "bin/darwin-arm64/vcs",
+      "sha256": "45ec15d5a543695c3ff6c4a59c4a762afba4adb9a902ae30852adaaec9234070"
+    }
+  },
+  "build": {
+    "command": "cargo build --release --locked --offline",
+    "path_remapping": true,
+    "platform": "darwin-arm64",
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "stripped": true
+  },
+  "schema_version": 1,
+  "source_changes": [
+    "CLI-only workspace excludes desktop",
+    "HOME falls back to USERPROFILE",
+    "Native CLI exposes shared snippet/full search, pagination, filters and full-record reads"
+  ],
+  "source_checksums": {
+    "Cargo.lock": "58e0073059396253911f10cf551bdfa76e476c1d9471eb7ae9c5caa2763c8ea7",
+    "Cargo.toml": "e9e908bc5bcb1f613236dc30eb9aa7268896888523e4910bf08b8d43af22db52",
+    "crates/vcs-adapters/Cargo.toml": "1327b340d135955107276a33ef4d4df0d88fabe21354375328d82001c3cc9f93",
+    "crates/vcs-adapters/src/claude.rs": "2e35088e21dea66ac51d04278617fce2964c4d0e96704511e40a23b54fa58baf",
+    "crates/vcs-adapters/src/codex.rs": "d0a6b6fa2e4db3c2734b2aed22a276407a5bbbd99dd97fbcb6d698370832dd02",
+    "crates/vcs-adapters/src/context.rs": "ac77db81e3db1aaa63d2d10e66bc6eba5f53c76f24c3dd6c57092c286aacaab4",
+    "crates/vcs-adapters/src/cursor.rs": "6593b93f1d3e614a1484e5d2e8f6cf195ccf3a435fad47ccf685d40583cf8992",
+    "crates/vcs-adapters/src/cursor_agent.rs": "9045215c1e76bd0027b6e645194930f1c5f3e29c11bd0a683a04e019c711846a",
+    "crates/vcs-adapters/src/lib.rs": "a70d0738abdb8f82b515c0fdd0128df4db137c5089b9275d457dbed989fcf0cd",
+    "crates/vcs-cli/Cargo.toml": "d0a88c886a081b539d5c9118fbc27686c2bf026bc05738d79173b12296c5fae3",
+    "crates/vcs-cli/src/main.rs": "72de770afe0165c506c8ae224dde2d1fc411433a524cab676506bfa9cf927679",
+    "crates/vcs-cli/src/server.rs": "83d5b50a1b2867f2765d6a6dd11a3dc8c263d32b48d5da8cfe96e30f31dec382",
+    "crates/vcs-core/Cargo.toml": "f97d5467376464579e7b19f063085f438862de36076a9716a7cc109e748c4fca",
+    "crates/vcs-core/src/index.rs": "37a39d73eff305cdcd6839b3d4a2d5cd9f4f23c47e222976e795ad954c25252d",
+    "crates/vcs-core/src/lib.rs": "5e2907a5bbbbe5ce3cb7334269a2eff14405486b17b7e76c8f241e81d0090077",
+    "crates/vcs-core/src/time.rs": "18951b688af16d3abbfe7cefd92c532136df4ad76248dcdd82c70c6468fb88b0",
+    "crates/vcs-service/Cargo.toml": "a4ee99181c9fd0ebb930a83d8e657ddbe4cf032b90cf281d56277ffb8a7d99a5",
+    "crates/vcs-service/src/bench.rs": "1038223cffcff6bdc5c148e3b162ebf3e58454a53c5f01def0fdb171f3b6608f",
+    "crates/vcs-service/src/integrations.rs": "cecf8748a2c69809b45983ca042932629049967dc700638297d15e6bfeda5183",
+    "crates/vcs-service/src/lib.rs": "fd93f37f7f0cd6982eaef5facbbc823f42a682f5bd01921664e5a1b23bfd6f7e",
+    "crates/vcs-service/src/map.rs": "cca62bce1cfe49324d634cf5c5983ca3826c9fb21010703cf20615192bb22834",
+    "crates/vcs-service/src/mcp.rs": "fc18fa45b157eeca7736d56100f98beb5ec4cc3e60757495c016463559bfc427"
+  },
+  "source_commit": "00155f61ca24e855d77262236d13b5c1089e24b5",
+  "source_license": "MIT",
+  "source_project": "Visible Conversation Search"
+}

@@ -1,0 +1,21 @@
+[workspace]
+resolver = "2"
+members = ["crates/vcs-core", "crates/vcs-adapters", "crates/vcs-service", "crates/vcs-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+vcs-core = { path = "crates/vcs-core" }
+vcs-adapters = { path = "crates/vcs-adapters" }
+vcs-service = { path = "crates/vcs-service" }
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+rusqlite = { version = "0.32", features = ["bundled"] }
+walkdir = "2"
+clap = { version = "4", features = ["derive"] }
+tiny_http = "0.12"

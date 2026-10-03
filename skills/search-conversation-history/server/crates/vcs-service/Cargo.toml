@@ -1,0 +1,12 @@
+[package]
+name = "vcs-service"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+vcs-core.workspace = true
+vcs-adapters.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true

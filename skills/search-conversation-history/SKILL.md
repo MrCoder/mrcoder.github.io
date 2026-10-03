@@ -5,9 +5,7 @@ description: Use when reconstructing decisions or evolving approaches across Cod
 
 # Search Conversation History
 
-Use this skill for non-trivial reconstruction across the three local history sources. The `fast-conversation-search` MCP tools are the default path. Indexed acceleration requires a separately installed compatible MCP server; it is not bundled. If no compatible server or configuration is available, use the bundled Python extractor; inspect original records separately when evidence requires content excluded from the visible index.
-
-See [installation and standalone usage](references/install.md) for setup, supported defaults, and dependency limits. Replace `<skill-dir>` in commands with the actual installed directory.
+Use this skill for non-trivial reconstruction across the three local history sources. Run the bundled CLI through `python3 <skill-dir>/scripts/history.py`; no MCP configuration or client restart is needed. See [installation](references/install.md) for platform requirements. Replace `<skill-dir>` with the actual installed directory. If the CLI cannot run, state the blocker and use the Python extractor; inspect original records when evidence requires content excluded from the visible index.
 
 ## Choose the mode and scope
 
@@ -32,21 +30,24 @@ Add a brief judgement of whether the query suits indexed search, and offer `$sea
 
 ## Search visible conversation
 
-Use the MCP tools: `search_visible_conversations` (literal substring search returning raw match snippets), `read_conversation_record` (one indexed message by `record_id`), and `read_conversation_context` (surrounding messages for one hit), provided by a separately installed compatible `fast-conversation-search` server configured for your runtime (for example, `~/.claude.json` or `~/.codex/config.toml`). Check that configuration and these tools exist first. If absent, continue with Extract; do not assume a server is preconfigured. They read a persistent, local-only trigram index built from normalized `role: user`/`role: assistant` records; reasoning, tool calls, tool results, system instructions, and source-specific metadata are excluded by contract. Keep this MCP path visible-only.
+The bundled CLI reads a persistent, local-only trigram index built from normalized `role: user`/`role: assistant` records. Reasoning, tool calls, tool results, system instructions, and source-specific metadata are excluded. All commands return JSON. Use the same database throughout a request; add `--database <path>` to each command only when using a nondefault index.
 
-Before the first MCP query for each history-search request, refresh the shared index once. Read the active runtime config's `mcpServers`/`mcp_servers` entry and use its configured executable and exact `--database` value; do not assume the executable's default database:
+Before the first query for each history-search request, refresh the index once:
 
 ```bash
-"<configured executable>" index --database "<configured database>"
+python3 <skill-dir>/scripts/history.py index
+python3 <skill-dir>/scripts/history.py search "<literal phrase>" --limit 20
+python3 <skill-dir>/scripts/history.py record "<record_id>"
+python3 <skill-dir>/scripts/history.py context --session "<session_id>" --timestamp "<timestamp>" --span 1
 ```
 
 Do not add `--days`: the shared index retains all historical coverage, and fingerprint-based incremental indexing skips unchanged records. Do not refresh before each query or context read. Refresh again only when you need records created after the completed refresh.
 
-Wait for completion and inspect index state and per-source errors; an exit code alone is insufficient. If a refresh fails but leaves an existing index, MCP may still return results: state the freshness limitation and do not conclude "no evidence" from stale results.
+Wait for completion and inspect index state and per-source errors; an exit code alone is insufficient. If a refresh fails but leaves an existing index, search may still return results: state the freshness limitation and do not conclude "no evidence" from stale results.
 
-Search snippets first; expand relevant hits by `record_id` before relying on a decision, qualifier, or contradiction that the snippet may omit. Read surrounding context only when needed, normally with `span: 1` and the hit’s timestamp. `truncated` describes stored-text truncation; snippet clipping is separate. If the indexed full record is truncated and its missing tail matters, read the original record through Evidence fallback. Use `format: "full"` only when the whole search result is needed.
+Search snippets first; expand relevant hits by `record_id` before relying on a decision, qualifier, or contradiction that the snippet may omit. Read surrounding context only when needed, normally with `--span 1` and the hit’s timestamp. `truncated` describes stored-text truncation; snippet clipping is separate. If the indexed full record is truncated and its missing tail matters, read the original record through Evidence fallback. Use `--format full` only when the whole search result is needed.
 
-For bounded questions, use relevant `source`, `cwd_prefix`, `since` (inclusive), and `until` (exclusive) filters; do not invent scope restrictions. Choose `order: "newest"` for current decisions or `"oldest"` for origins. When `has_more` is true, continue with `next_offset` as `offset`, preserving query, filters, and order. An unexamined page is not evidence of absence. Do not refresh between pages; if the index changes, restart pagination.
+For bounded questions, use relevant `--source`, `--cwd-prefix`, `--since` (inclusive), and `--until` (exclusive) filters; do not invent scope restrictions. Choose `--order newest` for current decisions or `--order oldest` for origins. When `has_more` is true, continue with `next_offset` as `--offset`, preserving query, filters, and order. An unexamined page is not evidence of absence. Do not refresh between pages; if the index changes, restart pagination.
 
 Within one history-search request, keep a set of expanded `record_id` values. Reuse already-read records; fetch again only for fresh data, and reconsider them when new context changes their meaning. If the runtime supports local batching (for example, Codex `functions.exec`), suppress repeated `record_id`s before emitting results to the model while preserving each query's `has_more`, `next_offset`, and provenance; otherwise limit overlapping searches and avoid duplicate full reads.
 
@@ -71,7 +72,7 @@ Derive specific literal terms and synonyms. Search all three sources locally thr
 
 Do not launch one agent per source by default: all three sources are searched locally. Use the cheapest capable worker only for independent, complex candidate subsets, giving it only the question and candidate evidence, never a whole source/history or the full parent conversation. Preserve direct-match and conceptual-match labels, timestamps, session IDs, and `cwd`; report unavailable sources. Expand to all history only when the evidence warrants it.
 
-MCP is primary when connected. If its connector is disconnected but the configured executable works, use that executable's CLI or stdio MCP against the same configured database; extraction is only for when the index path is unavailable. Verify the advertised tool schemas; if a connected server predates snippet/pagination tools, use the configured stdio MCP. If refresh fails with a stale index, report the freshness limit and do not claim absence.
+CLI is the default. Optional MCP serves the same engine and output semantics; setup is described in the installation reference. If refresh fails with a stale index, report the freshness limit and do not claim absence.
 
 ## Evidence fallback
 

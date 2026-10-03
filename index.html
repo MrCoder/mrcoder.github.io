@@ -103,12 +103,19 @@ for f in SKILL.md references/diagram-rules.md references/mermaid-syntax.md refer
   curl -fLsS "$base/$f" -o "$dest/$f"
 done
 
-dest=~/.claude/skills/search-conversation-history
-base=https://mrcoder.github.io/skills/search-conversation-history
-mkdir -p "$dest/scripts" "$dest/agents" "$dest/references"
-for f in SKILL.md agents/openai.yaml references/benchmark.md references/install.md scripts/extract_history.py scripts/test_extract_history.py scripts/measure_usage.py scripts/test_measure_usage.py; do
-  curl -fLsS "$base/$f" -o "$dest/$f"
-done
+(
+  set -e
+  dest=~/.claude/skills
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  base=https://mrcoder.github.io/downloads/search-conversation-history.zip
+  curl -fLsS "$base" -o "$tmp/search-conversation-history.zip"
+  curl -fLsS "$base.sha256" -o "$tmp/search-conversation-history.zip.sha256"
+  (cd "$tmp" &amp;&amp; shasum -a 256 -c search-conversation-history.zip.sha256)
+  mkdir -p "$dest"
+  unzip -oq "$tmp/search-conversation-history.zip" -d "$dest"
+  python3 "$dest/search-conversation-history/scripts/history.py" index
+)
 
 dest=~/.claude/skills/unattended
 base=https://mrcoder.github.io/skills/unattended
@@ -166,9 +173,10 @@ curl -fLsS https://mrcoder.github.io/skills/renhua/SKILL.md \
           Reconstructs decisions across Codex, Claude Code, and Cursor when the session is
           unknown, the question crosses sources, or an approach evolved over time. Use a
           targeted <code>rg</code> search when you already know the file and one keyword.
-          Indexed search needs a separate compatible <code>fast-conversation-search</code>
-          MCP server; it is not bundled. The packaged Python fallback works standalone with
-          Python 3.10+ against local, read-only histories.
+          The package includes the native history CLI (with optional MCP support),
+          a CLI launcher, and a Python fallback. Indexing and search run locally without an
+          API key. Setup requires Python 3.11+; Apple Silicon Macs use the bundled executable.
+          Other platforms build the included source with Rust/Cargo and a C compiler.
         </p>
         <p class="desc">
           The search footer reports elapsed time (including any refresh) and cache-separated
@@ -187,18 +195,26 @@ curl -fLsS https://mrcoder.github.io/skills/renhua/SKILL.md \
           <a href="/downloads/search-conversation-history.zip">Download ZIP</a> ·
           <a href="/downloads/search-conversation-history.zip.sha256">SHA-256 checksum</a> ·
           <a href="/skills/search-conversation-history/references/install.md">Install guide</a>.
-          The shell command below installs to <code>~/.claude/skills/search-conversation-history</code>;
-          Codex users can use <code>~/.codex/skills/search-conversation-history</code> as the
-          alternate destination.
+          The command below installs the full package and creates the local index.
+          The skill uses the CLI directly: no MCP configuration or client restart is needed.
+          For Codex, change <code>dest</code> to <code>~/.codex/skills</code>.
+          The Apple Silicon path has been verified; other platforms require a source build.
         </p>
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for search-conversation-history">copy</button></div>
-          <pre><code>dest=~/.claude/skills/search-conversation-history
-base=https://mrcoder.github.io/skills/search-conversation-history
-mkdir -p "$dest/scripts" "$dest/agents" "$dest/references"
-for f in SKILL.md agents/openai.yaml references/benchmark.md references/install.md scripts/extract_history.py scripts/test_extract_history.py scripts/measure_usage.py scripts/test_measure_usage.py; do
-  curl -fLsS "$base/$f" -o "$dest/$f"
-done</code></pre>
+          <pre><code>(
+  set -e
+  dest=~/.claude/skills
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  base=https://mrcoder.github.io/downloads/search-conversation-history.zip
+  curl -fLsS "$base" -o "$tmp/search-conversation-history.zip"
+  curl -fLsS "$base.sha256" -o "$tmp/search-conversation-history.zip.sha256"
+  (cd "$tmp" &amp;&amp; shasum -a 256 -c search-conversation-history.zip.sha256)
+  mkdir -p "$dest"
+  unzip -oq "$tmp/search-conversation-history.zip" -d "$dest"
+  python3 "$dest/search-conversation-history/scripts/history.py" index
+)</code></pre>
         </div>
       </div>
     </article>

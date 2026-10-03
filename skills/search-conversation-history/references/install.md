@@ -1,63 +1,75 @@
-# Install and use
+# Install search-conversation-history
 
-The ZIP contains the skill, Python helpers, fixture tests, and references. Python 3.10 or newer is required. The helpers use Python's standard library; no runtime pip dependencies are needed. The Rust search engine and MCP server are not bundled.
+The ZIP includes the skill, a local history CLI, Apple Silicon executable, Rust source, Python fallback, usage measurement, tests, and license notices. Indexing and search stay on your machine; no API key or model call is needed.
 
-Download `search-conversation-history.zip` and its `.sha256` file from this site's download links. From the directory containing both files, verify and install for Claude Code:
+## Install
+
+Download [the ZIP](https://mrcoder.github.io/downloads/search-conversation-history.zip) and [its SHA-256 checksum](https://mrcoder.github.io/downloads/search-conversation-history.zip.sha256). Verify the checksum before extracting:
 
 ```bash
 shasum -a 256 -c search-conversation-history.zip.sha256
-mkdir -p "$HOME/.claude/skills"
-unzip search-conversation-history.zip -d "$HOME/.claude/skills"
+unzip search-conversation-history.zip -d ~/.claude/skills
+python3 ~/.claude/skills/search-conversation-history/scripts/history.py index
 ```
 
-For Codex, use this destination instead:
+For Codex, extract to `~/.codex/skills` instead. For other agents, use their skill discovery directory. Keep the extracted directory: it contains the executable and scripts. No client configuration changes or restart are needed for CLI use; the agent needs shell execution access.
+
+Requirements:
+
+- Python 3.11+ for the launcher and usage helper.
+- Apple Silicon macOS: the bundled native executable runs directly; Rust is unnecessary. This is the verified platform.
+- Intel macOS, Linux, and Windows: the launcher builds the included source on first use. Install [Rust/Cargo](https://www.rust-lang.org/tools/install) and a C compiler first. These platforms have not been verified for this release. Cargo may download build dependencies; history data is not sent to Cargo.
+
+The launcher verifies the bundled binary checksum before executing it. Other platforms build into `~/.cache/conversation-history/native`. Build errors remain visible; the Python extractor is available if native setup is blocked.
+
+## Use the CLI
+
+Replace `<skill-dir>` with the installed directory:
 
 ```bash
-mkdir -p "$HOME/.codex/skills"
-unzip search-conversation-history.zip -d "$HOME/.codex/skills"
+python3 <skill-dir>/scripts/history.py index
+python3 <skill-dir>/scripts/history.py search "literal phrase" --limit 20 --source claude --order newest
+python3 <skill-dir>/scripts/history.py search "literal phrase" --since 2026-01-01 --until 2026-02-01 --offset 20 --limit 20
+python3 <skill-dir>/scripts/history.py record "<record_id>"
+python3 <skill-dir>/scripts/history.py context --session "<session_id>" --timestamp "<timestamp>" --span 1
 ```
 
-Back up an existing skill directory before replacing it. Restart the agent session if the new skill is not discovered. Normal invocation:
+Output is JSON. Search defaults to match snippets; `--format full` returns full indexed messages. Search supports `--source`, `--cwd-prefix`, `--since`, `--until`, `--order`, `--limit`, and `--offset`. Follow `next_offset` while `has_more` is true, preserving query and filters. Expand selected hits with `record`, then read context when needed. `index_empty: true` means an index has not been built, not that the topic was never discussed.
 
-```text
-/search-conversation-history <question>       # Claude Code
-$search-conversation-history <question>       # Codex
-```
+The default database is `~/.local/share/visible-conversation-search/index.sqlite`. Add `--database <absolute-path>` to each command for a separate index. The launcher creates a private index file. History stores are read-only. Refresh once per request without `--days`; fingerprints skip unchanged files. First build time depends on history size. Inspect source warnings: partial or stale coverage cannot establish absence.
 
-Benchmark invocation (loads the benchmark reference):
+Defaults cover `~/.codex/sessions`, `~/.claude/projects`, Cursor IDE's macOS Application Support store, and `~/.cursor/projects`. Cursor IDE store detection is currently macOS-specific. Nonstandard roots can be read through the Python fallback options below.
 
-```text
-/search-conversation-history benchmark <question>
-$search-conversation-history benchmark <question>
-```
+Invoke the skill normally with `$search-conversation-history <question>` (Claude also accepts `/search-conversation-history <question>`). Use a targeted `rg` or JSON parser for a known file and one exact term. For a controlled workflow comparison, explicitly invoke `$search-conversation-history benchmark <question>`; see [benchmark.md](benchmark.md).
 
-## Standalone Python extraction
+## Optional MCP
 
-This path works without an MCP server. Set `SKILL_DIR` to your installation and use a disposable private output directory outside any repository:
+MCP is optional. The bundled executable also supports:
 
 ```bash
-SKILL_DIR="$HOME/.codex/skills/search-conversation-history"
-OUTPUT_DIR="$(mktemp -d)"
-python3 "$SKILL_DIR/scripts/extract_history.py" --days 30 --output "$OUTPUT_DIR"
+<skill-dir>/server/bin/darwin-arm64/vcs mcp --database <absolute-path>
 ```
 
-Inspect `summary.json` first, then search the normalized `codex.jsonl`, `claude.jsonl`, and `cursor.jsonl` with bounded local parsing. Use `--all` when the question needs older evidence. These output files contain private history; do not publish them. Remove the disposable directory after use when safe.
+On other platforms, use the built `vcs` (`vcs.exe` on Windows) under `~/.cache/conversation-history/native/release`. Add that executable and the arguments `mcp`, `--database`, and the absolute index path to your client's MCP configuration only if you want MCP integration. The server exposes `search_visible_conversations`, `read_conversation_record`, and `read_conversation_context`. Index freshness still requires one `index` command per request. CLI use does not require any of this configuration.
 
-Defaults are `~/.codex`, `~/.claude`, macOS Cursor IDE `~/Library/Application Support/Cursor`, and Cursor Agent Host `~/.cursor/chats`. Linux and Windows Cursor IDE paths are not detected automatically. Pass `--cursor-root <actual Cursor application-data directory>` for those systems or any nonstandard setup. Other overrides are `--codex-root`, `--claude-root`, and `--cursor-agent-root`. Missing or unrecognized stores are reported in the summary; the remaining sources can still be used.
-
-## Optional indexed acceleration
-
-Indexed mode requires a separately installed compatible `fast-conversation-search` MCP server exposing `search_visible_conversations`, `read_conversation_record`, and `read_conversation_context`. It also requires a configured executable supporting `index --database <configured database>`. This distribution does not provide the Rust engine, an installer, or a download location for it. Do not assume it is available or use an invented installation command.
-
-Check the active runtime's MCP configuration and tool schemas. Refresh once with its exact configured executable and database, following the main skill. If compatible configuration is absent, use Python extraction. If a configured connector is disconnected but its executable works, the main skill permits that executable's compatible CLI or stdio MCP path.
-
-## Usage measurement and tests
-
-The measurement helper discovers Codex logs only under the default `~/.codex/sessions`, verifying `CODEX_THREAD_ID`. Custom `CODEX_HOME` auto-discovery is unsupported; provide `--session-log <verified current log>` or report unavailable counters. Claude requires an explicit verified current log. Missing or reset counters are unavailable, never estimates. See the main skill for request-boundary measurement and the benchmark reference for comparison rules.
+## Python fallback and usage
 
 ```bash
-python3 "$SKILL_DIR/scripts/extract_history.py" --help
-python3 "$SKILL_DIR/scripts/measure_usage.py" --help
-python3 "$SKILL_DIR/scripts/test_extract_history.py"
-python3 "$SKILL_DIR/scripts/test_measure_usage.py"
+python3 <skill-dir>/scripts/extract_history.py --days 30 --output <private-temp-dir>
+# If necessary, widen into a new directory:
+python3 <skill-dir>/scripts/extract_history.py --all --output <another-private-temp-dir>
 ```
+
+Read `summary.json`, then locally filter normalized records before returning snippets. Custom roots: `--codex-root`, `--claude-root`, `--cursor-root`, `--cursor-agent-root`. Missing or unrecognized stores must be reported. Do not change history files.
+
+The skill reports elapsed time and request-boundary usage counters. Codex auto-discovery verifies the current thread in default session stores. Claude requires an explicit current log. Other runtimes or inaccessible counters report unavailable. These are usage counts, not billing dollars; final response generation is outside the measurement boundary.
+
+## Verify and inspect
+
+```bash
+python3 <skill-dir>/scripts/test_history.py
+python3 <skill-dir>/scripts/test_extract_history.py
+python3 <skill-dir>/scripts/test_measure_usage.py
+```
+
+`server/provenance.json` records source and executable checksums. `server/LICENSE` and `server/THIRD_PARTY_NOTICES.md` contain the project and dependency license notices. Source-only CLI workspace builds with `cargo build --release --locked --manifest-path <skill-dir>/server/Cargo.toml`; no desktop application is included.

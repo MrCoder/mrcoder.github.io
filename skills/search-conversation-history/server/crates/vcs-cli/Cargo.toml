@@ -1,0 +1,19 @@
+[package]
+name = "vcs-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "vcs"
+path = "src/main.rs"
+
+[dependencies]
+vcs-core.workspace = true
+vcs-adapters.workspace = true
+vcs-service.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+tiny_http.workspace = true
