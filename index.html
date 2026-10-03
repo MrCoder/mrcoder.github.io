@@ -99,8 +99,8 @@ done
 
 dest=~/.claude/skills/search-conversation-history
 base=https://mrcoder.github.io/skills/search-conversation-history
-mkdir -p "$dest/scripts" "$dest/agents"
-for f in SKILL.md scripts/extract_history.py agents/openai.yaml; do
+mkdir -p "$dest/scripts" "$dest/agents" "$dest/references"
+for f in SKILL.md agents/openai.yaml references/benchmark.md references/install.md scripts/extract_history.py scripts/test_extract_history.py scripts/measure_usage.py scripts/test_measure_usage.py; do
   curl -fLsS "$base/$f" -o "$dest/$f"
 done
 
@@ -125,22 +125,40 @@ curl -fLsS https://mrcoder.github.io/skills/overnight/SKILL.md \
       <div>
         <h2><a href="#search-conversation-history">search-conversation-history</a></h2>
         <p class="desc">
-          Searches visible user-and-assistant conversations across Codex, Claude Code, and
-          Cursor through a refreshed local index — normalising three incompatible stores into
-          dated, source-linked evidence. It expands only relevant hits; raw records are read
-          only when strict evidence requires them.
+          Reconstructs decisions across Codex, Claude Code, and Cursor when the session is
+          unknown, the question crosses sources, or an approach evolved over time. Use a
+          targeted <code>rg</code> search when you already know the file and one keyword.
+          Indexed search needs a separate compatible <code>fast-conversation-search</code>
+          MCP server; it is not bundled. The packaged Python fallback works standalone with
+          Python 3.10+ against local, read-only histories.
+        </p>
+        <p class="desc">
+          The search footer reports elapsed time (including any refresh) and cache-separated
+          uncached input, cached input, and output, with cache writes separately when nonzero.
+          Counters stop at the latest usage event before the final response; unavailable values
+          stay unavailable. Benchmark
+          mode is <code>$search-conversation-history benchmark &lt;question&gt;</code>
+          (Claude also accepts <code>/search-conversation-history benchmark &lt;question&gt;</code>).
         </p>
         <ul class="triggers">
           <li>"search conversation history"</li>
           <li>"how did we handle this before?"</li>
           <li>"find the earlier discussion about X"</li>
         </ul>
+        <p class="desc">
+          <a href="/downloads/search-conversation-history.zip">Download ZIP</a> ·
+          <a href="/downloads/search-conversation-history.zip.sha256">SHA-256 checksum</a> ·
+          <a href="/skills/search-conversation-history/references/install.md">Install guide</a>.
+          The shell command below installs to <code>~/.claude/skills/search-conversation-history</code>;
+          Codex users can use <code>~/.codex/skills/search-conversation-history</code> as the
+          alternate destination.
+        </p>
         <div class="cmd">
           <div class="cmd-bar"><button class="cmd-copy" type="button" aria-label="Copy install command for search-conversation-history">copy</button></div>
           <pre><code>dest=~/.claude/skills/search-conversation-history
 base=https://mrcoder.github.io/skills/search-conversation-history
-mkdir -p "$dest/scripts" "$dest/agents"
-for f in SKILL.md scripts/extract_history.py agents/openai.yaml; do
+mkdir -p "$dest/scripts" "$dest/agents" "$dest/references"
+for f in SKILL.md agents/openai.yaml references/benchmark.md references/install.md scripts/extract_history.py scripts/test_extract_history.py scripts/measure_usage.py scripts/test_measure_usage.py; do
   curl -fLsS "$base/$f" -o "$dest/$f"
 done</code></pre>
         </div>

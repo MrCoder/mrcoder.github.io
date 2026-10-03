@@ -1,15 +1,38 @@
 ---
 name: search-conversation-history
-description: Search local Codex, Claude Code, and Cursor conversation histories for prior decisions, approaches, incidents, commands, or context. Default to visible user and assistant conversation text; retrieve raw records only when strict evidence requires it.
+description: Use when reconstructing decisions or evolving approaches across Codex, Claude Code, and Cursor histories, when the original source is uncertain, or when a question needs multiple related lookups.
 ---
 
 # Search Conversation History
 
-Search all three local history sources. The `fast-conversation-search` MCP tools are the default path. Use the extractor only when indexed search is unavailable; inspect original records separately when evidence requires content excluded from the visible index.
+Use this skill for non-trivial reconstruction across the three local history sources. The `fast-conversation-search` MCP tools are the default path. Indexed acceleration requires a separately installed compatible MCP server; it is not bundled. If no compatible server or configuration is available, use the bundled Python extractor; inspect original records separately when evidence requires content excluded from the visible index.
+
+See [installation and standalone usage](references/install.md) for setup, supported defaults, and dependency limits. Replace `<skill-dir>` in commands with the actual installed directory.
+
+## Choose the mode and scope
+
+A known file or session plus one exact term is a simple lookup. Do **not** use this skill for it: use a targeted `rg` or a small JSON parser, bound the returned matches, and never dump giant raw lines. Use this skill when the source is uncertain, the answer crosses tools or sessions, a decision changed over time, or several related lookups must be reconciled.
+
+Recognize `benchmark` as a mode before ordinary search when it is the first argument: `$search-conversation-history benchmark <question>` or the Claude slash equivalent `/search-conversation-history benchmark <question>`. In benchmark mode, load and follow [references/benchmark.md](references/benchmark.md) before searching. Do not paste the full reference into an ordinary answer, and do not repeat a heavy benchmark automatically for every query.
+
+## Measure each history search
+
+Before refresh or extraction, create a private temporary directory and start the helper with a nonexistent state path; finish after evidence collection, before drafting the answer:
+
+```text
+python3 <skill-dir>/scripts/measure_usage.py start --state <temp-dir>/state.json [--session-log <verified current log>]
+python3 <skill-dir>/scripts/measure_usage.py finish --state <temp-dir>/state.json
+```
+
+Codex auto-discovery searches the default `~/.codex/sessions` and verifies `CODEX_THREAD_ID`; custom `CODEX_HOME` auto-discovery is unsupported, so pass a verified explicit log or report counters unavailable; verify `agent_path` when present. Claude needs an explicit current log. A child's log must belong to that child. Missing or reset counters mean unavailable, never estimated; use only this request's boundary deltas.
+
+End with one concise line in the user's language: elapsed (refresh included when performed), uncached input, cached input, output; include cache writes separately when nonzero. Uncached input includes cache writes; output includes reasoning. State that counters stop at the latest available usage event before the final response and may lag. These are usage counters, not billing dollars.
+
+Add a brief judgement of whether the query suits indexed search, and offer `$search-conversation-history benchmark <same question>` when a comparison would help. Load benchmark details only in that mode.
 
 ## Search visible conversation
 
-Use the MCP tools: `search_visible_conversations` (literal substring search returning raw match snippets), `read_conversation_record` (one indexed message by `record_id`), and `read_conversation_context` (surrounding messages for one hit), served by the `fast-conversation-search` server registered in both `~/.claude.json` and `~/.codex/config.toml`. They read a persistent, local-only trigram index built from normalized `role: user`/`role: assistant` records; reasoning, tool calls, tool results, system instructions, and source-specific metadata are excluded by contract. Keep this MCP path visible-only.
+Use the MCP tools: `search_visible_conversations` (literal substring search returning raw match snippets), `read_conversation_record` (one indexed message by `record_id`), and `read_conversation_context` (surrounding messages for one hit), provided by a separately installed compatible `fast-conversation-search` server configured for your runtime (for example, `~/.claude.json` or `~/.codex/config.toml`). Check that configuration and these tools exist first. If absent, continue with Extract; do not assume a server is preconfigured. They read a persistent, local-only trigram index built from normalized `role: user`/`role: assistant` records; reasoning, tool calls, tool results, system instructions, and source-specific metadata are excluded by contract. Keep this MCP path visible-only.
 
 Before the first MCP query for each history-search request, refresh the shared index once. Read the active runtime config's `mcpServers`/`mcp_servers` entry and use its configured executable and exact `--database` value; do not assume the executable's default database:
 
@@ -34,7 +57,7 @@ Do not merge distinct records because snippets match or text is semantically sim
 Create a disposable output directory and run:
 
 ```bash
-python3 ~/.claude/skills/search-conversation-history/scripts/extract_history.py \
+python3 <skill-dir>/scripts/extract_history.py \
   --days 30 --output "$OUTPUT_DIR"
 ```
 
@@ -83,5 +106,5 @@ Use `--codex-root`, `--claude-root`, `--cursor-root`, and `--cursor-agent-root` 
 Run fixture tests after changing the extractor:
 
 ```bash
-python3 ~/.claude/skills/search-conversation-history/scripts/test_extract_history.py
+python3 <skill-dir>/scripts/test_extract_history.py
 ```
