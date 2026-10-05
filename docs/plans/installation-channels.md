@@ -19,7 +19,7 @@ The installation worker verified skills CLI 1.7.0 against the real public `maste
 
 The marketplace is `mrcoder`; its one plugin is `mrcoder-skills`. The marketplace's `source: "./"` uses the repository root. The plugin uses Claude's default root `skills/` discovery, so it does not duplicate skills or add redundant custom paths. The plugin contains no hooks, agents, MCP or LSP services.
 
-Remote commands, **after the manifests are published to master**:
+Remote commands, verified against published `master` on 5 October 2026:
 
 ```sh
 claude plugin marketplace add 'https://github.com/MrCoder/mrcoder.github.io.git#master'
@@ -47,8 +47,9 @@ Claude Code 2.1.289, with isolated configuration directories under `/private/tmp
 - Same isolated configuration, `claude plugin install mrcoder-skills@mrcoder --scope user --json`: successful installation.
 - Same isolated configuration, `claude plugin details mrcoder-skills`: twelve skills, including renhua; no agents, hooks, MCP or LSP components.
 - Installed cache at `/private/tmp/mrcoder-plugin-local-test/plugins/cache/mrcoder/mrcoder-skills/1.0.0`: all 59 canonical skill files matched exact bytes and executable flags.
-- Public remote registration of the Git URL with `#master`: `manifest_missing`, expected because `.claude-plugin` remains local. A subsequent branch-argument observation encountered the sandbox's DNS restriction, without changing this publication finding.
+- Earlier public remote registration returned `manifest_missing` before publication. A subsequent branch-argument observation encountered the sandbox's DNS restriction. These are historical pre-release findings.
+- After publishing commit `3d6954978cb90bb62e3d778b950091ffe83216d8` to `master`, remote Git marketplace registration and plugin installation both succeeded in an isolated configuration directory. Plugin details listed twelve skills; all 59 installed package files matched canonical bytes and executable flags.
 
-No user Claude settings were changed, and no model or paid API was invoked. The manifests have not been pushed, deployed or submitted to any external marketplace. Remote plugin installation must be checked again after an accepted preview and an authorized publication.
+No user Claude settings were changed, and no model or paid API was invoked. The manifests are now published on `master` and remote plugin installation is verified. This remains our own marketplace; no submission to an external marketplace is claimed. See [release evidence](../evidence/2026-10-05-release.md).
 
 The build verifies the independent command contract, explicit branch, aliases/dependencies, exact plugin strings and canonical plugin metadata. Nine publishing tests include rejection of stale Bash endpoints, unpinned source commands, missing companion skills, redirected plugin sources and duplicate skill paths. The original 66-file preservation fixture remains unchanged.

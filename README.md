@@ -54,7 +54,7 @@ npx skills@latest add https://github.com/MrCoder/mrcoder.github.io/tree/master
 
 The CLI offers agent and skill selection. Individual command rows include explicit companion skills where required. Choose the complete set or use the tested per-skill commands in the install guide. Run `npx skills update` from the installed project for CLI-managed updates.
 
-Claude Code has a second channel. These commands become usable remotely after the local manifests are published to `master`:
+Claude Code has a second channel. These commands were verified against the published `master` manifests on 5 October 2026:
 
 ```sh
 claude plugin marketplace add 'https://github.com/MrCoder/mrcoder.github.io.git#master'
@@ -63,9 +63,11 @@ claude plugin install mrcoder-skills@mrcoder
 
 The plugin's skills use namespaced invocations such as `/mrcoder-skills:diagram`. Manual plugin updates use `claude plugin marketplace update mrcoder`, then `claude plugin update mrcoder-skills@mrcoder`. Third-party marketplace auto-updates are a user setting; no automatic update promise is made here. This is our own marketplace, not an Anthropic marketplace.
 
-Both manifests passed strict validation with Claude Code 2.1.289. An isolated local marketplace install discovered twelve directories (eleven skills plus renhua); all 59 package files and executable bits matched the canonical source. Remote registration returned `manifest_missing`, as the manifests are still local. See [installation channel evidence](docs/plans/installation-channels.md).
+Both manifests passed strict validation with Claude Code 2.1.289. An isolated local marketplace install discovered twelve directories (eleven skills plus renhua); all 59 package files and executable bits matched the canonical source. Remote registration and plugin installation from `master` subsequently succeeded in isolated configuration; all twelve entries and 59 package files matched the canonical source, including executable flags. See [installation channel evidence](docs/plans/installation-channels.md).
 
 ## Release gate and hosting
+
+Released on 5 October 2026 from [`3d69549`](https://github.com/MrCoder/mrcoder.github.io/commit/3d6954978cb90bb62e3d778b950091ffe83216d8). The Pages workflow completed successfully, and public HTTP checks verified all 66 preserved files by SHA-256, sixteen site HTML pages, the package HTML template, sitemap, robots rules and expected 404 responses. Both remote installation channels passed. See [release evidence](docs/evidence/2026-10-05-release.md).
 
 Pre-release research found that GitHub Pages publishes `master` using the legacy Pages source, while the repository default branch is `gh-pages`. Verify these settings through the GitHub API before deployment. The workflow in `.github/workflows/pages.yml` targets the publishing branch, `master`, and validates pull requests without deploying them. A push or manual run on `master` builds and publishes a Pages artifact; `configure-pages` has automatic enablement disabled.
 
