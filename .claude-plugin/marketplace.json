@@ -1,0 +1,13 @@
+{
+  "name": "mrcoder",
+  "owner": { "name": "Peng Xiao" },
+  "description": "MrCoder Skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "mrcoder-skills",
+      "source": "./",
+      "description": "The complete MrCoder skill set, including package files and the renhua alias.",
+      "strict": true
+    }
+  ]
+}

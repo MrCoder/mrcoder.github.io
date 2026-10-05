@@ -1,0 +1,11 @@
+---
+// Command row adapted from AI Hero skills/install-command and skills-install-options.
+import {agents,installCommand,installAllCommand} from '../data/install';
+const {slug,all=false,command,chooseAgent=false,label='Copy install command'}=Astro.props;
+const primary=command||(all?installAllCommand():installCommand(slug));
+const commands=command?[{id:'interactive',command}]:[{id:'interactive',command:primary},...agents.map(a=>({id:a.id,command:all?installAllCommand(a.id):installCommand(slug,a.id)}))];
+---
+<div class="installer" data-commands={JSON.stringify(commands).replaceAll("'", "\\u0027")}>{chooseAgent&&<div class="command-toolbar"><label>Install for <select class="js-only" aria-label="Coding agent"><option value="interactive">Choose in the terminal</option>{agents.map(a=><option value={a.id}>{a.label}</option>)}</select><noscript>Choose in the terminal</noscript></label></div>}<div class="compact-command"><pre tabindex="0"><code>{primary}</code></pre><button class="copy js-only" type="button" aria-label={label}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button></div><p class="copy-status" aria-live="polite"></p></div>
+<script>
+document.querySelectorAll<HTMLElement>('.installer').forEach(el=>{const commands=JSON.parse(el.dataset.commands||'[]');const code=el.querySelector('.compact-command code')!;const select=el.querySelector('select');const status=el.querySelector('.copy-status')!;select?.addEventListener('change',()=>{code.textContent=commands.find((c:{id:string})=>c.id===select.value).command;status.textContent=''});el.querySelector('button')?.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(code.textContent||'');status.textContent='Command copied.'}catch{status.textContent='Clipboard unavailable. Select the command and copy it manually.';const range=document.createRange();range.selectNodeContents(code);const selection=window.getSelection();selection?.removeAllRanges();selection?.addRange(range);}})});
+</script>
