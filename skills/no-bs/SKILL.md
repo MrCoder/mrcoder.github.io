@@ -1,30 +1,49 @@
 ---
 name: no-bs
-description: Re-explain the previous answer (or a given text) in plain Chinese, keeping only what the user needs to make their decision. Use when the user invokes /no-bs or $no-bs, invokes the renhua aliases /renhua or $renhua, says "说人话", "说中文", "我看不懂", "太多细节", "讲简单点", or complains that an answer is too long, too technical, or full of irrelevant detail.
+description: Re-explain the previous answer (or a given text) in plain language, in the language the user is using, keeping only what the user needs to make their decision. Use when the user invokes /no-bs or $no-bs, invokes the renhua aliases /renhua or $renhua, says "plain English", "in plain words", "I don't get it", "too much detail", "tl;dr", "说人话", "说中文", "我看不懂", "太多细节", "讲简单点", or complains that an answer is too long, too technical, or full of irrelevant detail.
 ---
 
 # No BS (说人话)
 
-把上一条回答(或用户指定的内容)重新讲一遍:**中文、大白话、只留对决策有用的部分**。
+Re-explain the previous answer (or the text the user points to): **plain language, in the right language, keeping only what matters for the decision.**
 
-## 输出规则
+## Choose the language
 
-1. **先说结论。** 第一句话就回答"所以呢?我该怎么办?"
-2. **只留决策相关的点。** 判断标准:删掉这一条,用户的决定会不会变?不会变就删。
-   典型该删的:实现机制、历史来龙去脉、证据链细节、文件路径、commit/PR 编号(除非用户要去操作它)、"顺便发现的"事实。
-3. **不用行话。** 内部代号、项目黑话、英文术语,能翻译就翻译,必须保留的(如 PR 编号、产品名)用一句话解释它是什么。
-4. **短。** 3 个以内要点,编号列表;每点一两句。整体不超过原回答的三分之一。
-5. **不加新信息,不改结论。** 这是翻译,不是重新分析。原回答里的结论、行动项必须原样保留。
-6. **行动项放最后单独一条**,明说"你要做的是什么 / 不用做什么"。
+Decide the output language before writing, in this order:
 
-## 示例
+1. **Explicit request wins.** "Say it in English", "说中文", "in Japanese" → use that language.
+2. **Otherwise, match the user.** Use the language of the user's most recent message(s), not the language of the answer being simplified. A Chinese-speaking user asking about an English answer gets Chinese; an English-speaking user asking about a Chinese text gets English.
+3. **Mixed or unclear** (e.g. only `/no-bs` was typed): use the language the user has mostly written in during this conversation. If there is still no signal, use the language of the original answer.
 
-原回答(节选,英文、多段、术语很多):
+Keep the same language for the whole reply. Product names, commands, and identifiers the user must act on stay as-is.
+
+## Output rules
+
+1. **Conclusion first.** The first sentence answers "So what? What should I do?"
+2. **Keep only decision-relevant points.** Test: if this point were deleted, would the user's decision change? If not, delete it.
+   Usually delete: implementation mechanics, history and backstory, evidence-chain detail, file paths, commit/PR numbers (unless the user needs to act on them), and incidental findings.
+3. **No jargon.** Translate internal code names, project slang, and technical terms into everyday words. Anything that must stay (a PR number, a product name) gets a one-line explanation of what it is.
+4. **Short.** At most three numbered points, one or two sentences each. The whole reply is no more than a third of the original's length.
+5. **Add nothing new; change no conclusions.** This is a translation, not a re-analysis. Every conclusion and action item in the original must survive unchanged.
+6. **Action item last, on its own line**: state plainly what the user needs to do, and what they don't need to do.
+
+## Examples
+
+Original answer (excerpt; long, multi-paragraph, full of jargon):
 
 > Ticket ZX-104 describes a rollout that is waiting on a stale approval. The old plan
-> assumes a retired service, while the current fix is a small settings change. (以下省略 300 词)
+> assumes a retired service, while the current fix is a small settings change. (300 more words omitted)
 
-人话版:
+If the user writes in English:
+
+> ZX-104 is a "release is stuck" ticket: the old plan targeted a service that no longer exists, and now only one setting needs changing.
+>
+> Three things matter:
+> 1. It hasn't shipped because the approval is out of date.
+> 2. You only need to change a setting, not redo the whole plan.
+> 3. The conclusion is the same: refresh the approval, then release.
+
+If the user writes in Chinese:
 
 > ZX-104 就是一个"上线卡住了"的工单:原来的方案针对已经停用的服务,现在只需要改一项设置。
 >
@@ -33,7 +52,7 @@ description: Re-explain the previous answer (or a given text) in plain Chinese, 
 > 2. 现在应该改设置,不用重做整套方案。
 > 3. 结论不变:先更新审批信息,再上线。
 
-## 注意
+## Notes
 
-- 如果原回答本身有错,不要在"人话版"里悄悄修正——先指出错误,再给人话版。
-- 用户追问细节时,可以展开;默认永远是压缩版。
+- If the original answer is wrong, do not quietly fix it in the plain version: point out the error first, then give the plain version.
+- If the user asks for more detail, expand; the default is always the compressed version.
