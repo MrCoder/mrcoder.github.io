@@ -1,37 +1,28 @@
 ---
 name: pitch-me
-description: Package a prototype, spec, and deviation log into a single explainer document to get stakeholder buy-in or review approval, leading with a demo if one exists. Use when the user says pitch me, pitch this, buy-in doc, explainer for the team, write this up for review, or package this for Slack.
+description: Create a concise, self-contained visual explainer for a proposal, design, plan, implementation, or existing system. Use when the user says pitch me, pitch this, or asks to package work as a visual explainer or review page.
 ---
 
 # Pitch Me
 
-Getting approval is a distinct deliverable from the code itself. A reviewer starts with the same unknowns you did — the doc's job is to accelerate them past the ones you already resolved.
-
-## When to apply
-
-- The user wants sign-off, review, or approval from someone who hasn't been following the work.
-- Not for routine PR descriptions — this is a persuasive artifact for people catching up cold, not a technical summary for someone already reviewing the diff.
+Make the subject understandable to the user, team, or stakeholder without reading the preceding conversation. Approval or buy-in may be requested, but it is optional.
 
 ## Procedure
 
-1. Gather what exists: any prototype or artifact from brainstorming, the written plan if there is one, and `deviation-log.md` if one exists.
-2. Lead with the demo — a GIF, screenshot, or short recording of the thing working — before any prose. If nothing visual exists and the change has a UI, consider producing one now (see `prototype`) rather than skipping straight to text.
-3. Structure the rest to answer the questions a reviewer already has, in the order they'd ask them:
-   - What problem this solves, for whom
-   - What was actually built (the what, not the how)
-   - What tradeoffs were made and why (draw on Deviations)
-   - What was considered and rejected, if anything (draw on brainstorming output)
-   - What's out of scope or could still go wrong (draw on `blind-spot-pass` findings if that ran)
-4. Build it as one self-contained HTML page (see `artifact-design`) — a single file, not a multi-page site with its own nav or routes — unless the user explicitly asks for a full site. Skip the artifact and draft the message directly if the destination is plain-text Slack.
-5. This produces a draft only. Posting it anywhere — Slack, email, a PR comment — needs the user's explicit go-ahead. Never auto-send.
+1. Gather whatever exists: proposal, design, plan, implementation, screenshots, prototype, notes, or decision history. Missing artifacts are fine; prototype and deviation logs are optional. Reuse established visual design and components without reopening settled design choices.
+2. Lead with the clearest visual:
+   - built behavior: demo or screenshots;
+   - proposal or design: mockup or diagram;
+   - timing or rollout: timeline;
+   - explanation: the visual that clarifies the relationship.
 
-## When NOT to apply
+   Embed relevant screenshots and assets in the HTML so it remains self-contained. Label visuals and claims `Proposed`, `Verified`, or another accurate status.
+3. Add only useful context: problem or question, audience, current state, key idea or behavior, evidence, tradeoffs, risks, and next step when relevant. Keep prose concise. Include a decision or request section only when a real decision is needed.
+4. Create one self-contained HTML page by default. If Claude's `artifact-design` guidance is available, use it; otherwise use portable HTML with inline CSS and embedded assets. Use another format or a full site only when explicitly requested. If plain text is requested, write directly in that format.
+5. Preview or open the HTML in an available browser or artifact viewer. Verify that the lead visual, embedded screenshots, status labels, and layout render correctly.
 
-- Internal-only technical changes with no external reviewer or stakeholder.
-- The user just wants a commit message or PR description — that's plain project convention, not this skill.
+Send or post only with explicit user authorization. Authorization already given in the conversation counts; do not ask again. Without authorization, return the artifact for review.
 
-## Related
+## When not to apply
 
-- `deviation-log` — source material for tradeoffs.
-- `blind-spot-pass` — source material for what could still go wrong.
-- `prototype` — source material for the demo.
+- Routine commit messages or PR descriptions unless the user explicitly asks for a pitch or explainer.
