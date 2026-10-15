@@ -474,32 +474,9 @@ h4 {
   padding:48px 44px 52px;
   border-bottom:1px solid var(--line)
 }
-.catalogue-heading {
-  margin-bottom:34px;
-  position:relative
-}
-.catalogue-heading h2 {
-  margin-bottom:12px
-}
-.catalogue-heading .lede {
-  margin-bottom:20px
-}
-.search {
-  display:flex;
-  gap:8px;
-  max-width:360px
-}
-.search input {
-  width:100%;
-  min-width:0;
-  background:var(--bg);
-  border:1px solid var(--strong);
-  border-radius:9px;
-  padding:9px 12px;
-  font-size:13px
-}
-.search button {
-  font-size:12px
+.skill-group:first-child {
+  border-top:0;
+  padding-top:0
 }
 .skill-group {
   display:grid;
@@ -788,10 +765,6 @@ pre code {
   font-size:14px;
   color:var(--muted)
 }
-.no-results {
-  padding:40px 0;
-  color:var(--muted)
-}
 footer {
   padding:44px;
   background:var(--bg);
@@ -946,9 +919,6 @@ html:not(.js) .js-only {
   }
   .footer-brand p br {
     display:none
-  }
-  .catalogue-heading .lede {
-    max-width:52ch
   }
   .skill-row a {
     margin:0;
