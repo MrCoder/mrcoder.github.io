@@ -1,6 +1,6 @@
 {
   "name": "mrcoder-skills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Practical coding-agent skills for understanding context, guiding work, and checking results.",
   "author": { "name": "Peng Xiao" },
   "homepage": "https://mrcoder.github.io",

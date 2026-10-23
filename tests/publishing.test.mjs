@@ -7,7 +7,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 import { publishStatic, trackedPublishPaths } from '../scripts/publish-static.mjs';
 import { assertInstallationContract, assertPluginMetadata, expectedSkillsCommand, installationExports, assertInternalLinks, assertPageContract, assertPreservedFiles, assertZipChecksums } from '../scripts/verify-site.mjs';
-import { MARKETPLACE_COMMAND, PLUGIN_COMMAND, LEGACY_SKILLS, PAGE_ROUTES, SITE_URL, routeFile } from '../scripts/site-contract.mjs';
+import { MARKETPLACE_COMMAND, PLUGIN_COMMAND, LEGACY_SKILLS, ALL_SKILLS, PAGE_ROUTES, SITE_URL, routeFile } from '../scripts/site-contract.mjs';
 
 const hash = value => createHash('sha256').update(value).digest('hex');
 async function temporary(t) {
@@ -43,7 +43,7 @@ test('publishing copies tracked package bytes and excludes untracked scratch fil
 test('immutable release fixture covers every existing package/download/asset', async () => {
   const baseline = JSON.parse(await readFile(new URL('./fixtures/published-files.json', import.meta.url), 'utf8'));
   const paths = (await readFile(new URL('./fixtures/published-paths.txt', import.meta.url), 'utf8')).trim().split('\n');
-  assert.equal(paths.length, 66);
+  assert.equal(paths.length, 67);
   assert.deepEqual(Object.keys(baseline), paths);
   const tracked = trackedPublishPaths().filter(file => file !== '.nojekyll');
   assert.deepEqual(tracked, paths);
@@ -126,12 +126,12 @@ test('current command generator preserves branch, alias and shared-core dependen
 });
 
 test('plugin metadata loads canonical packages once and rejects a redirected source', async t => {
-  assert.equal(await assertPluginMetadata(), 12);
+  assert.equal(await assertPluginMetadata(), 13);
   const directory = await temporary(t);
   const root = new URL('../', import.meta.url).pathname;
   for (const file of ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json']) await put(directory, file, await readFile(path.join(root, file)));
-  for (const slug of [...LEGACY_SKILLS, 'renhua']) await put(directory, `skills/${slug}/SKILL.md`, '# Skill');
-  assert.equal(await assertPluginMetadata(directory), 12);
+  for (const slug of [...ALL_SKILLS, 'renhua']) await put(directory, `skills/${slug}/SKILL.md`, '# Skill');
+  assert.equal(await assertPluginMetadata(directory), 13);
   const manifest = JSON.parse(await readFile(path.join(directory, '.claude-plugin/marketplace.json')));
   manifest.plugins[0].source = './duplicate-packages';
   await put(directory, '.claude-plugin/marketplace.json', JSON.stringify(manifest));

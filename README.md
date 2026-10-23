@@ -24,7 +24,7 @@ The build runs Astro, copies tracked raw packages/downloads/assets into `dist/`,
 
 ## Maintain content
 
-- `src/data/skills.ts` defines the eleven skills, three main groups, quieter optional practices, related links, examples, requirements, and human documentation.
+- `src/data/skills.ts` defines the twelve skills, three main groups, quieter optional practices, related links, examples, requirements, and human documentation.
 - `src/data/install.ts` generates official `npx skills@latest` commands and the Claude Code plugin commands. The source explicitly selects `master`, because this repository defaults to `gh-pages`. Individual commands include the renhua companion for no-bs and the unattended core for overnight.
 - `.claude-plugin/plugin.json` and `marketplace.json` expose the existing root `skills/` as one Claude Code plugin named `mrcoder-skills` in the `mrcoder` marketplace. Do not duplicate packages or add redundant skill paths.
 - `src/pages/`, `src/layouts/`, `src/components/`, and `src/styles/` define the website. `public/` holds website assets. Record the upstream source and preserve relevant notices when adapting files.
@@ -36,13 +36,13 @@ The raw file URLs and homepage skill anchors remain stable. `/skills/renhua/` ex
 
 ## Compatibility checks
 
-`tests/fixtures/published-files.json` records SHA-256 hashes for all 66 package, download, and asset files that existed before the redesign. `published-paths.txt` records the matching paths. Build verification compares both source and output to this fixed baseline, so modifying both cannot silently bypass preservation.
+`tests/fixtures/published-files.json` records SHA-256 hashes for the 66 package, download, and asset files that existed before the redesign, plus `skills/better-ui/SKILL.md` (added 23 October 2026). `published-paths.txt` records the matching paths. Build verification compares both source and output to this fixed baseline, so modifying both cannot silently bypass preservation.
 
 A deliberate package release needs its own review, regenerated ZIP/checksum where applicable, and an explained baseline update. Do not refresh the fixture merely to make a failed build pass. Keep website changes separate from package releases.
 
 Tests check the immutable publishing boundary, actual CLI command generation, complete skill package files and executable permissions, alias/dependency selections, and plugin metadata. Installer tests use temporary destinations; real remote CLI and isolated local plugin evidence is recorded separately. Installing the history package does not initialise its local index.
 
-Build verification checks both ZIP checksums, all fifteen canonical routes, eleven old homepage anchors, the alias link, static 404, sitemap, local HTML links/fragments, exact official CLI commands, and canonical Claude plugin metadata. The earlier bespoke `/install.sh` prototype and its curl/Bash evidence are superseded; that endpoint is removed.
+Build verification checks both ZIP checksums, all sixteen canonical routes, eleven old homepage anchors, the alias link, static 404, sitemap, local HTML links/fragments, exact official CLI commands, and canonical Claude plugin metadata. The earlier bespoke `/install.sh` prototype and its curl/Bash evidence are superseded; that endpoint is removed.
 
 ## Installation channels
 

@@ -11,8 +11,11 @@ export const LEGACY_SKILLS = [
   'no-bs', 'search-conversation-history', 'diagram', '1by1', 'unattended',
   'overnight', 'blind-spot-pass', 'deviation-log', 'spot-check', 'merge-quiz', 'pitch-me',
 ];
+// Skills released after the redesign. Each needs a tracked package, a skills.ts entry and a fixture row.
+export const ADDED_SKILLS = ['better-ui'];
+export const ALL_SKILLS = [...LEGACY_SKILLS, ...ADDED_SKILLS];
 export const PAGE_ROUTES = [
-  '/', '/install/', '/about/', ...[...LEGACY_SKILLS, 'renhua'].map(slug => `/skills/${slug}/`),
+  '/', '/install/', '/about/', ...[...ALL_SKILLS, 'renhua'].map(slug => `/skills/${slug}/`),
 ];
 
 export function routeFile(route) {

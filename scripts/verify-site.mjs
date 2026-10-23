@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import ts from 'typescript';
-import { LEGACY_SKILLS, PAGE_ROUTES, SITE_URL, SKILLS_SOURCE, PLUGIN_NAME, MARKETPLACE_NAME, MARKETPLACE_COMMAND, PLUGIN_COMMAND, PLUGIN_UPDATE_COMMAND, routeFile } from './site-contract.mjs';
+import { LEGACY_SKILLS, ALL_SKILLS, PAGE_ROUTES, SITE_URL, SKILLS_SOURCE, PLUGIN_NAME, MARKETPLACE_NAME, MARKETPLACE_COMMAND, PLUGIN_COMMAND, PLUGIN_UPDATE_COMMAND, routeFile } from './site-contract.mjs';
 
 const workspace = fileURLToPath(new URL('../', import.meta.url));
 const fixturePath = new URL('../tests/fixtures/published-files.json', import.meta.url);
@@ -155,15 +155,15 @@ export async function assertPluginMetadata(root = workspace) {
   if (entry.name !== PLUGIN_NAME || entry.source !== './' || entry.strict !== true) throw new Error('Claude plugin must use the canonical repository root');
   // Claude discovers root skills/ by default. Redundant paths can load a package twice.
   if ('skills' in plugin || 'skills' in entry || ['hooks', 'mcpServers', 'lspServers'].some(key => key in plugin || key in entry)) throw new Error('Claude plugin must expose only canonical default skills');
-  for (const slug of [...LEGACY_SKILLS, 'renhua']) {
+  for (const slug of [...ALL_SKILLS, 'renhua']) {
     if (!(await existsFile(path.join(root, 'skills', slug, 'SKILL.md')))) throw new Error(`Missing Claude plugin skill: ${slug}`);
   }
-  return 12;
+  return ALL_SKILLS.length + 1;
 }
 
 export async function assertInstallationContract(directory, source) {
   const allowed = new Set(['npx skills update']);
-  for (const slug of [undefined, ...LEGACY_SKILLS, 'renhua']) {
+  for (const slug of [undefined, ...ALL_SKILLS, 'renhua']) {
     for (const agent of [undefined, 'claude', 'codex']) {
       const expected = expectedSkillsCommand(slug, agent);
       if (source) {

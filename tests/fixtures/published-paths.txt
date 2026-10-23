@@ -6,6 +6,7 @@ downloads/no-bs.zip.sha256
 downloads/search-conversation-history.zip
 downloads/search-conversation-history.zip.sha256
 skills/1by1/SKILL.md
+skills/better-ui/SKILL.md
 skills/blind-spot-pass/SKILL.md
 skills/deviation-log/SKILL.md
 skills/diagram/SKILL.md
